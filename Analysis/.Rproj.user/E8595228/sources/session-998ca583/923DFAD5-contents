@@ -1,0 +1,4 @@
+# What climate metric to use
+# Used HStress as WSI metric
+#Some discussion about using Jaccard similarity rather than dissimilarity...
+#

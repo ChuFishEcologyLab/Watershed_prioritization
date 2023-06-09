@@ -1,0 +1,77 @@
+require(tidyverse)
+
+###read weightings
+weights = read_csv("Co_author_weightings.csv")
+
+med_weights = weights %>% select(-Co_author) %>% 
+  summarise_all(median) %>% 
+  pivot_longer(cols = everything(), names_to="Variable", values_to="Weight")
+
+###
+data5 = read_csv("Hybas5_data.csv")
+
+#priorities for Protected areas
+data5 = data5 %>%
+       mutate(protection_score = WSI_n*med_weights$Weight[1]+
+                                 FBCI_n*med_weights$Weight[2]+
+                                 CCI_n*med_weights$Weight[3]+
+                                 SARI_n*med_weights$Weight[4]+
+                                 Fish_richness_n*med_weights$Weight[5]+
+                                 Priority_n*med_weights$Weight[6])
+#ranked within FEOW
+data5 = data5 %>% 
+  arrange(FEOW_ID, -protection_score) %>% 
+  group_by(FEOW_ID) %>% 
+  mutate(Prot_rank_feow=row_number())
+
+#priorities for restoration
+data5 = data5 %>%
+  mutate(restoration_score = WSI_n*med_weights$Weight[7]+
+           FBCI_n*med_weights$Weight[8]+
+           CCI_n*med_weights$Weight[9]+
+           SARI_n*med_weights$Weight[10]+
+           Fish_richness_n*med_weights$Weight[11]+
+           Priority_n*med_weights$Weight[12])
+
+#ranked within FEOW
+data5 = data5 %>% ungroup() %>%
+  arrange(FEOW_ID, -restoration_score) %>% 
+  group_by(FEOW_ID) %>% 
+  mutate(Rest_rank_feow=row_number())
+
+
+#priorities for SAR
+data5 = data5 %>%
+  mutate(SAR_score = WSI_n*med_weights$Weight[13]+
+           FBCI_n*med_weights$Weight[14]+
+           CCI_n*med_weights$Weight[15]+
+           SARI_n*med_weights$Weight[16]+
+           Fish_richness_n*med_weights$Weight[17]+
+           Priority_n*med_weights$Weight[18])
+
+#ranked within FEOW
+data5 = data5 %>% ungroup() %>%
+  arrange(FEOW_ID, -SAR_score) %>% 
+  group_by(FEOW_ID) %>% 
+  mutate(SAR_rank_feow=row_number())
+
+#priorities for AIS
+data5 = data5 %>%
+  mutate(AIS_score = WSI_n*med_weights$Weight[19]+
+           FBCI_n*med_weights$Weight[20]+
+           CCI_n*med_weights$Weight[21]+
+           SARI_n*med_weights$Weight[22]+
+           Fish_richness_n*med_weights$Weight[23]+
+           Priority_n*med_weights$Weight[24])
+
+#ranked within FEOW
+data5 = data5 %>% ungroup() %>%
+  arrange(FEOW_ID, -AIS_score) %>% 
+  group_by(FEOW_ID) %>% 
+  mutate(AIS_rank_feow=row_number())
+
+write_csv(data5, "watershed_prioritization_level5.csv")
+rm(list=ls())
+
+##########################################################################
+

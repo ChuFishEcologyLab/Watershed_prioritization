@@ -1,0 +1,259 @@
+require(tidyverse)
+require(viridis)
+require(ggmap)
+require(ggspatial)
+require(sf)
+require(GGally)
+require(ggbeeswarm)
+require(gridExtra)
+
+#pairwise rankings
+#co-author scores
+
+
+
+#load data
+######################
+data5 = read_csv("watershed_prioritization_level5.csv")
+weights = read_csv("Co_author_weightings.csv")
+
+map5 = read_sf("hyC_5_join_shp_Lamb_up.shp")
+map5 = left_join(map5, data5, by="HYBAS_ID")
+
+feow = read_sf("FEOW_CAN_Extent/FEOW__CAN_Extent.shp")
+
+###########
+#data exploration
+#pairwise correlations
+
+#Input data
+ggpairs(data5, 
+        columns = c("WSI_n", "FBCI_n", "CCI_n","SARI_n", "Fish_richness_n", "Priority_n"),
+        columnLabels = c("WSI_n", "FBCI_n", "CCI_n","SARI_n", "Fish_richness_n", "FishPriority_n"))
+
+#Scores
+ggpairs(data5, 
+        columns = c("protection_score", "restoration_score", "SAR_score", "AIS_score"))
+
+ggpairs(data5, 
+        columns = c("Prot_rank_feow", "Rest_rank_feow", "SAR_rank_feow", "AIS_rank_feow"))
+
+####
+#weightings plot
+##########
+
+pdata1 = weights[,c(1:6)]
+pdata1 = pivot_longer(pdata1, cols = starts_with("Weight for"))
+pdata1$name<- rep(c("Watershed stress", "Fish biodiversity change", "Climate change",
+                    "Species at risk density", "Fish richness", "Fish rarity"), 8)
+sumpdata1 = pdata1 %>% group_by(name) %>% summarize (med = median(value))
+
+p1<-ggplot()+
+  geom_hline(aes(yintercept = 0), color = "black", linetype=2 )+
+  geom_beeswarm(data=pdata1, aes(x=reorder(name, value, median),  y = value), size=2)+
+  geom_point(data = sumpdata1, aes(x=name, y = med), color="black", alpha = 0.2, size=6)+
+  scale_y_continuous(breaks = c(-4,-2,0,2,4), limits = c(-6,6))+
+  ylab("Weight")+xlab("")+
+  coord_flip()+
+  theme_minimal()+
+  ggtitle("Area-based protection")+
+  theme(legend.position = "bottom", legend.title = element_blank())+
+  theme(plot.title = element_text(hjust=0.5))
+
+p1
+
+###########
+pdata2 = weights[,c(7:12)]
+pdata2 = pivot_longer(pdata2, cols = starts_with("Weight for"))
+pdata2$name<- rep(c("Watershed stress", "Fish biodiversity change", "Climate change",
+                    "Species at risk density", "Fish richness", "Fish rarity"), 8)
+sumpdata2 = pdata2 %>% group_by(name) %>% summarize (med = median(value))
+
+p2<-ggplot()+
+  geom_hline(aes(yintercept = 0), color = "black", linetype=2 )+
+  geom_beeswarm(data=pdata2, aes(x=reorder(name, value, median),  y = value), size=2)+
+  geom_point(data = sumpdata2, aes(x=name, y = med), color="black", alpha = 0.2, size=6)+
+  scale_y_continuous(breaks = c(-4,-2,0,2,4), limits = c(-6,6))+
+  ylab("Weight")+xlab("")+
+  coord_flip()+
+  theme_minimal()+
+  ggtitle("Restoration")+
+  theme(legend.position = "bottom", legend.title = element_blank())+
+  theme(plot.title = element_text(hjust=0.5))
+p2
+
+###########
+pdata3 = weights[,c(13:18)]
+pdata3 = pivot_longer(pdata3, cols = starts_with("Weight for"))
+pdata3$name<- rep(c("Watershed stress", "Fish biodiversity change", "Climate change",
+                    "Species at risk density", "Fish richness", "Fish rarity"), 8)
+sumpdata3 = pdata3 %>% group_by(name) %>% summarize (med = median(value))
+
+p3<-ggplot()+
+  geom_hline(aes(yintercept = 0), color = "black", linetype=2 )+
+  geom_beeswarm(data=pdata3, aes(x=reorder(name, value, median),  y = value), size=2)+
+  geom_point(data = sumpdata3, aes(x=name, y = med), color="black", alpha = 0.2, size=6)+
+  scale_y_continuous(breaks = c(-4,-2,0,2,4), limits = c(-6,6))+
+  ylab("Weight")+xlab("")+
+  coord_flip()+
+  theme_minimal()+
+  ggtitle("Species at risk management")+
+  theme(legend.position = "bottom", legend.title = element_blank())+
+  theme(plot.title = element_text(hjust=0.5))
+p3
+
+###########
+pdata4 = weights[,c(19:24)]
+pdata4 = pivot_longer(pdata4, cols = starts_with("Weight for"))
+pdata4$name<- rep(c("Watershed stress", "Fish biodiversity change", "Climate change",
+                    "Species at risk density", "Fish richness", "Fish rarity"), 8)
+sumpdata4 = pdata4 %>% group_by(name) %>% summarize (med = median(value))
+
+p4<-ggplot()+
+  geom_hline(aes(yintercept = 0), color = "black", linetype=2 )+
+  geom_beeswarm(data=pdata4, aes(x=reorder(name, value, median),  y = value), size=2)+
+  geom_point(data = sumpdata4, aes(x=name, y = med), color="black", alpha = 0.2, size=6)+
+  scale_y_continuous(breaks = c(-4,-2,0,2,4), limits = c(-6,6))+
+  ylab("Weight")+xlab("")+
+  coord_flip()+
+  theme_minimal()+
+  ggtitle("Invasive species management")+
+  theme(legend.position = "bottom", legend.title = element_blank())+
+  theme(plot.title = element_text(hjust=0.5))
+p4
+
+grid.arrange(p1,p2,p3,p4, nrow=2)
+
+
+
+#Maps
+map5_test = map5 %>% filter(FEOW_ID %in% c(113:115, 117:119))
+feow_test = feow %>% filter(FEOW_ID %in% c(113:115, 117:119))
+
+##plotting area-based protection priorities
+#1.1 regional priorities for area-based protection - level 5
+ggplot() +
+  layer_spatial(map5_test, aes(fill = Prot_rank_feow), col = "white", alpha=1)+
+  layer_spatial(feow_test, fill="transparent", color ="black", linewidth = 0.8)+
+  scale_fill_viridis(option = "magma", direction = -1, end =0.9,
+                     name="Priority", 
+                     breaks = c(1, max(map5_test$Prot_rank_feow)),
+                     labels=c("high", "low"))+
+  annotation_north_arrow(location = "br", which_north = "true")+
+  theme_minimal()+
+  theme(legend.position = c(0.75, 0.06), legend.direction = "horizontal")+
+  guides(fill = guide_colourbar(reverse = TRUE, title.position = "top", title.hjust =0.5))+
+  ggtitle("Priority watersheds for area-based protection",
+          subtitle = "rank within freshwater ecoregions")
+
+
+#1.2 national priorities for area-based protection - level 5
+ggplot() +
+  layer_spatial(map5_test, aes(fill = rank(-protection_score)), col = "white", alpha=1)+
+  scale_fill_viridis(option = "magma", direction = -1, end =0.9,
+                     name="Priority", 
+                     breaks = c(1, max(rank(-map5_test$protection_score))), 
+                     labels=c("high", "low") )+
+  annotation_north_arrow(location = "br", which_north = "true")+
+  theme_minimal()+
+  theme(legend.position = c(0.75, 0.06), legend.direction = "horizontal")+
+  guides(fill = guide_colourbar(reverse = TRUE, title.position = "top", title.hjust =0.5))+
+  ggtitle("Priority watersheds for area-based protection",
+          subtitle = "national ranks")
+
+####################################
+##2. plotting restoration priorities
+#2.1 regional priorities for restoration - level 5
+ggplot() +
+  layer_spatial(map5_test, aes(fill = Rest_rank_feow), col = "white", alpha=1)+
+  layer_spatial(feow_test, fill="transparent", color ="black", linewidth = 0.8)+
+  scale_fill_viridis(option = "magma", direction = -1, end =0.9,
+                     name="Priority", 
+                     breaks = c(1, max(map5_test$Rest_rank_feow)),
+                     labels=c("high", "low"))+
+  annotation_north_arrow(location = "br", which_north = "true")+
+  theme_minimal()+
+  theme(legend.position = c(0.75, 0.06), legend.direction = "horizontal")+
+  guides(fill = guide_colourbar(reverse = TRUE, title.position = "top", title.hjust =0.5))+
+  ggtitle("Priority watersheds for restoration",
+          subtitle = "rank within freshwater ecoregions")
+
+#2.2 national priorities for area-based protection - level 5
+ggplot() +
+  layer_spatial(map5_test, aes(fill = rank(-restoration_score)), col = "white", alpha=1)+
+  scale_fill_viridis(option = "magma", direction = -1, end =0.9,
+                     name="Priority", 
+                     breaks = c(1, max(rank(-map5_test$restoration_score))), 
+                     labels=c("high", "low") )+
+  annotation_north_arrow(location = "br", which_north = "true")+
+  theme_minimal()+
+  theme(legend.position = c(0.75, 0.06), legend.direction = "horizontal")+
+  guides(fill = guide_colourbar(reverse = TRUE, title.position = "top", title.hjust =0.5))+
+  ggtitle("Priority watersheds for restoration",
+          subtitle = "national ranks")
+
+
+####################################
+##3. plotting SAR priorities
+#3.1 regional priorities for SAR - level 5
+ggplot() +
+  layer_spatial(map5_test, aes(fill = SAR_rank_feow), col = "white", alpha=1)+
+  layer_spatial(feow_test, fill="transparent", color ="black", linewidth = 0.8)+
+  scale_fill_viridis(option = "magma", direction = -1, end =0.9,
+                     name="Priority", 
+                     breaks = c(1, max(map5_test$SAR_rank_feow)),
+                     labels=c("high", "low"))+
+  annotation_north_arrow(location = "br", which_north = "true")+
+  theme_minimal()+
+  theme(legend.position = c(0.75, 0.06), legend.direction = "horizontal")+
+  guides(fill = guide_colourbar(reverse = TRUE, title.position = "top", title.hjust =0.5))+
+  ggtitle("Priority watersheds for species at risk management",
+          subtitle = "rank within freshwater ecoregions")
+
+#3.2 national priorities for SAR - level 5
+ggplot() +
+  layer_spatial(map5_test, aes(fill = rank(-SAR_score)), col = "white", alpha=1)+
+  scale_fill_viridis(option = "magma", direction = -1, end =0.9,
+                     name="Priority", 
+                     breaks = c(1, max(rank(-map5_test$SAR_score))), 
+                     labels=c("high", "low") )+
+  annotation_north_arrow(location = "br", which_north = "true")+
+  theme_minimal()+
+  theme(legend.position = c(0.75, 0.06), legend.direction = "horizontal")+
+  guides(fill = guide_colourbar(reverse = TRUE, title.position = "top", title.hjust =0.5))+
+  ggtitle("Priority watersheds for species at risk management",
+          subtitle = "national ranks")
+
+
+####################################
+##4. plotting AIS priorities
+#4.1 regional priorities for AIS - level 5
+ggplot() +
+  layer_spatial(map5_test, aes(fill = AIS_rank_feow), col = "white", alpha=1)+
+  layer_spatial(feow_test, fill="transparent", color ="black", linewidth = 0.8)+
+  scale_fill_viridis(option = "magma", direction = -1, end =0.9,
+                     name="Priority", 
+                     breaks = c(1, max(map5_test$AIS_rank_feow)),
+                     labels=c("high", "low"))+
+  annotation_north_arrow(location = "br", which_north = "true")+
+  theme_minimal()+
+  theme(legend.position = c(0.75, 0.06), legend.direction = "horizontal")+
+  guides(fill = guide_colourbar(reverse = TRUE, title.position = "top", title.hjust =0.5))+
+  ggtitle("Priority watersheds for aquatic invasive species management",
+          subtitle = "rank within freshwater ecoregions")
+
+#4.2 national priorities for AIS - level 5
+ggplot() +
+  layer_spatial(map5_test, aes(fill = rank(-AIS_score)), col = "white", alpha=1)+
+  scale_fill_viridis(option = "magma", direction = -1, end =0.9,
+                     name="Priority", 
+                     breaks = c(1, max(rank(-map5_test$AIS_score))), 
+                     labels=c("high", "low") )+
+  annotation_north_arrow(location = "br", which_north = "true")+
+  theme_minimal()+
+  theme(legend.position = c(0.75, 0.06), legend.direction = "horizontal")+
+  guides(fill = guide_colourbar(reverse = TRUE, title.position = "top", title.hjust =0.5))+
+  ggtitle("Priority watersheds for aquatic invasive species management",
+          subtitle = "national ranks")
+
+

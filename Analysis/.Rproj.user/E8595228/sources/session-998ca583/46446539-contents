@@ -1,0 +1,36 @@
+library(dplyr)
+set.seed(123)
+
+var2 <- c(rep(NA, 5), rnorm(10, mean=2, sd=1))
+#var2 <- c(rnorm(15, mean=2, sd=1))
+var1 <- c(rep("A", 5), rep("B", 5), rep("C", 5))
+var3 <- rnorm(15, mean=25, sd=1)
+date <- rep(1:5, 3)
+df <- data.frame(var1, date, var2, var3) 
+
+
+df2 = df %>% group_by(var1) %>% 
+  summarize(
+    across(c(var2, var3),
+           list(sd=sd,var=var, count = ~sum(!is.na(.)) ), na.rm = TRUE))
+
+
+custom_lm <- function(Y, X){
+  if(sum(!is.na(Y)) == 0 | sum(!is.na(X)) == 0) {
+    NA} else {lm(Y~X, cur_data())$coef[2]}
+   }
+
+df %>% dplyr::group_by(var1) %>% 
+  dplyr::summarize(
+  across(c(var2, var3),
+         list(slope = ~custom_lm(., date)
+              )
+         )
+           )
+
+
+
+  
+
+lm(rep(NA,5)~c(1:5), )
+
