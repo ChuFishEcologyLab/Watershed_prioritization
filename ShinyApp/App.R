@@ -276,7 +276,7 @@ server <- function(input, output, session) {
  
   #calculate the ranks based on user input weightings
   data = data %>% 
-    mutate( score =  
+    dplyr::mutate( score =  
               WSI_n * input$WSI+
               FBCI_n * input$FBCI+
               CCI_n * input$CCI+
@@ -286,18 +286,18 @@ server <- function(input, output, session) {
   
   if(input$regional == FALSE){
   
-    data = data %>% mutate(watershed_rank = rank(-score))
+    data = data %>% dplyr::mutate(watershed_rank = rank(-score))
     } else{
     
       data =  data %>% arrange(FEOW_ID, -score) %>% 
       group_by(FEOW_ID) %>% 
-      mutate(watershed_rank=row_number()) 
+      dplyr::mutate(watershed_rank=row_number()) 
       
       #convert to relative ranks
       maxrank = max(data$watershed_rank-1)
       
       data = data %>%  group_by(FEOW_ID) %>%
-        mutate(watershed_rank = ( (watershed_rank-1)* maxrank/max(watershed_rank-1) )+1)
+        dplyr::mutate(watershed_rank = ( (watershed_rank-1)* maxrank/max(watershed_rank-1) )+1)
       
      data$watershed_rank[which(is.nan(data$watershed_rank))]<-(maxrank+1)/2 #if there is only 1 watershed in feow
           }

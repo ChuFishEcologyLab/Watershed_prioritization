@@ -51,19 +51,19 @@ map5<-read_sf("map5.gpkg")
 #
 maxrank = max(map6$Prot_rank_feow-1)
 map6 = map6 %>%  group_by(FEOW_ID) %>%
-  mutate(Prot_rank_feow_scaled = ( (Prot_rank_feow-1)* maxrank/max(Prot_rank_feow-1) )+1)
+  dplyr::mutate(Prot_rank_feow_scaled = ( (Prot_rank_feow-1)* maxrank/max(Prot_rank_feow-1) )+1)
 
 maxrank = max(map6$Rest_rank_feow-1)
 map6 = map6 %>%  group_by(FEOW_ID) %>%
-  mutate(Rest_rank_feow_scaled = ( (Rest_rank_feow-1)* maxrank/max(Rest_rank_feow-1) )+1)
+  dplyr::mutate(Rest_rank_feow_scaled = ( (Rest_rank_feow-1)* maxrank/max(Rest_rank_feow-1) )+1)
 
 maxrank = max(map6$SAR_rank_feow-1)
 map6 = map6 %>%  group_by(FEOW_ID) %>%
-  mutate(SAR_rank_feow_scaled = ( (SAR_rank_feow-1)* maxrank/max(SAR_rank_feow-1) ) +1 )
+  dplyr::mutate(SAR_rank_feow_scaled = ( (SAR_rank_feow-1)* maxrank/max(SAR_rank_feow-1) ) +1 )
 
 maxrank = max(map6$AIS_rank_feow-1)
 map6 = map6 %>%  group_by(FEOW_ID) %>%
-  mutate(AIS_rank_feow_scaled = ( (AIS_rank_feow-1)* maxrank/max(AIS_rank_feow-1) ) +1 )
+  dplyr::mutate(AIS_rank_feow_scaled = ( (AIS_rank_feow-1)* maxrank/max(AIS_rank_feow-1) ) +1 )
 
 ############
 
@@ -493,7 +493,7 @@ p1
 cor(data$Prot_rank_feow_scaled, data$Rest_rank_feow_scaled, method="spearman")
 
 data = data %>% 
-  mutate(wsh_fill = ifelse(
+  dplyr::mutate(wsh_fill = ifelse(
     Prot_rank_feow_scaled < perc1[2] & Rest_rank_feow_scaled < perc2[2], "a",
     ifelse(Prot_rank_feow_scaled < perc1[2], "b",
            ifelse(Rest_rank_feow_scaled < perc2[2], "c","d")
@@ -558,7 +558,7 @@ p2 = ggplot()+
 p2
 
 data = data %>% 
-  mutate(wsh_fill = ifelse(
+  dplyr::mutate(wsh_fill = ifelse(
     SAR_rank_feow_scaled < perc1[2] & AIS_rank_feow_scaled < perc2[2], "a",
     ifelse(SAR_rank_feow_scaled < perc1[2], "b",
            ifelse(AIS_rank_feow_scaled < perc2[2], "c","d")
@@ -606,7 +606,7 @@ ggplot()+
 #######
 d5 = map5 %>% st_drop_geometry() %>%ungroup()
 
-map6 = map6 %>% ungroup() %>% mutate(
+map6 = map6 %>% ungroup() %>% dplyr::mutate(
   protection_score5 = d5$protection_score[match(map6$corresponding.HYBAS5, d5$HYBAS_ID)],
   restoration_score5 = d5$restoration_score[match(map6$corresponding.HYBAS5, d5$HYBAS_ID)],
   SAR_score5 = d5$SAR_score[match(map6$corresponding.HYBAS5, d5$HYBAS_ID)],
@@ -674,19 +674,19 @@ data5 = map5
 data5$watershed_rank = data5$Rest_rank_feow
 maxrank1 = max(data5$watershed_rank-1)
 data5 = data5 %>%  group_by(FEOW_ID) %>%
-  mutate(watershed_rank = ( (watershed_rank-1)* maxrank1/max(watershed_rank-1) )+1)
+  dplyr::mutate(watershed_rank = ( (watershed_rank-1)* maxrank1/max(watershed_rank-1) )+1)
 data5$watershed_rank[which(is.nan(data5$watershed_rank))]<-(maxrank1+1)/2 #if there is only 1 watershed in feow
 
 data6=map6
 data6$watershed_rank = data6$Rest_rank_feow
 maxrank2 = max(data6$watershed_rank-1)
 data6 = data6 %>%  group_by(FEOW_ID) %>%
-  mutate(watershed_rank = ( (watershed_rank-1)* maxrank2/max(watershed_rank-1) )+1)
+  dplyr::mutate(watershed_rank = ( (watershed_rank-1)* maxrank2/max(watershed_rank-1) )+1)
 data6$watershed_rank[which(is.nan(data6$watershed_rank))]<-(maxrank2+1)/2 #if there is only 1 watershed in feow
 
 ##identify top 25th percentile
-data5 = data5 %>% mutate(priority_wsh = ifelse(watershed_rank< quantile(data5$watershed_rank)[2],"high","low"))
-data6 = data6 %>% mutate(priority_wsh = ifelse(watershed_rank< quantile(data6$watershed_rank)[2],"high","low"))
+data5 = data5 %>% dplyr::mutate(priority_wsh = ifelse(watershed_rank< quantile(data5$watershed_rank)[2],"high","low"))
+data6 = data6 %>% dplyr::mutate(priority_wsh = ifelse(watershed_rank< quantile(data6$watershed_rank)[2],"high","low"))
 
 
 ###

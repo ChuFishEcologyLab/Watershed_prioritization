@@ -19,10 +19,10 @@ for(i in 2:ncol(Ivals)){
 }
 
 Ivals = Ivals %>% rowwise() %>% 
-  mutate(QijSij = sum(c_across(Acipenser_brevirostrum:Percina_shumardi))) %>%
-  mutate(richness = sum(c_across(Acipenser_brevirostrum:Percina_shumardi) > 0 ))
+  dplyr::mutate(QijSij = sum(c_across(Acipenser_brevirostrum:Percina_shumardi))) %>%
+  dplyr::mutate(richness = sum(c_across(Acipenser_brevirostrum:Percina_shumardi) > 0 ))
  
-Ivals = Ivals %>% mutate(Ii = QijSij / TotalQ) %>% mutate(Qi = QijSij / richness)
+Ivals = Ivals %>% dplyr::mutate(Ii = QijSij / TotalQ) %>% dplyr::mutate(Qi = QijSij / richness)
 
 towrite = Ivals %>% select(HYBAS_ID, Ii, Qi)
 
@@ -50,10 +50,10 @@ for(i in 2:ncol(Ivals)){
 }
 
 Ivals = Ivals %>% rowwise() %>% 
-  mutate(QijSij = sum(c_across(Acipenser_brevirostrum:Percina_shumardi))) %>%
-  mutate(richness = sum(c_across(Acipenser_brevirostrum:Percina_shumardi) > 0 ))
+  dplyr::mutate(QijSij = sum(c_across(Acipenser_brevirostrum:Percina_shumardi))) %>%
+  dplyr::mutate(richness = sum(c_across(Acipenser_brevirostrum:Percina_shumardi) > 0 ))
 
-Ivals = Ivals %>% mutate(Ii = QijSij / TotalQ) %>% mutate(Qi = QijSij / richness)
+Ivals = Ivals %>% dplyr::mutate(Ii = QijSij / TotalQ) %>% dplyr::mutate(Qi = QijSij / richness)
 
 towrite = Ivals %>% select(HYBAS_ID, Ii, Qi)
 

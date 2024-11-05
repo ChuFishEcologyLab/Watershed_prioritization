@@ -47,12 +47,12 @@ colnames(data5)<- c("HYBAS_ID",
 
 #Standardize
 data5 = data5 %>%
-  mutate(FBCI_n = (100* (FBCI-min(FBCI)) / ( max(FBCI)-min(FBCI) )  ) ) %>%
-  mutate(WSI_n = (100* (WSI-min(WSI)) / ( max(WSI)-min(WSI) )  ) ) %>%
-  mutate(CCI_n = (100* (CCI-min(CCI)) / ( max(CCI)-min(CCI) )  ) ) %>%
-  mutate(Priority_n = (100* (Fish_priority-min(Fish_priority)) / ( max(Fish_priority)-min(Fish_priority) )  ) ) %>%
-  mutate(SARI_n = (100* (SARI-min(SARI)) / ( max(SARI)-min(SARI) )  ) ) %>%
-  mutate(Fish_richness_n = (100* (Fish_richness-min(Fish_richness)) / ( max(Fish_richness)-min(Fish_richness) )  ) )
+  dplyr::mutate(FBCI_n = (100* (FBCI-min(FBCI)) / ( max(FBCI)-min(FBCI) )  ) ) %>%
+  dplyr::mutate(WSI_n = (100* (WSI-min(WSI)) / ( max(WSI)-min(WSI) )  ) ) %>%
+  dplyr::mutate(CCI_n = (100* (CCI-min(CCI)) / ( max(CCI)-min(CCI) )  ) ) %>%
+  dplyr::mutate(Priority_n = (100* (Fish_priority-min(Fish_priority)) / ( max(Fish_priority)-min(Fish_priority) )  ) ) %>%
+  dplyr::mutate(SARI_n = (100* (SARI-min(SARI)) / ( max(SARI)-min(SARI) )  ) ) %>%
+  dplyr::mutate(Fish_richness_n = (100* (Fish_richness-min(Fish_richness)) / ( max(Fish_richness)-min(Fish_richness) )  ) )
 
 #join with feow
 feow5 = read_csv("hyc_5_feow_join.csv")
