@@ -1,6 +1,6 @@
 #' Calculate rarity indices
 #'
-#'
+#' @export
 
 
 compute_rarity_index <- function() {

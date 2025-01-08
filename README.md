@@ -18,3 +18,20 @@ The prioritizations were based on national spatial data of the richness, rarity,
 ### Outputs
 
 Data are stored in `output_data/`, the folder is created if missing.
+
+
+## Analysis 
+
+Install the package 
+
+```R
+install.packages("remotes")
+remotes::install_github("DFOChuLab/Watershed_prioritization")
+```
+
+Once installed run: 
+
+```R
+library(watershedPrioritization)
+run_pipeline()
+```
