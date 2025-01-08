@@ -141,5 +141,5 @@ apply_weight <- function() {
     path_output_data("watershed_prioritization_level6.csv")
   )
 
-  TRUE
+  invisible(TRUE)
 }
