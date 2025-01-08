@@ -8,3 +8,13 @@ This folder includes the data, analyses, and Shiny app built to visualize the re
 - iv) invasive species management. 
 
 The prioritizations were based on national spatial data of the richness, rarity, and at-risk status of fishes, the amount of climate change and other watershed stressors, and the degree of fish community change (native vs. current species present within watershed). 
+
+
+## Data 
+
+### Inputs 
+
+
+### Outputs
+
+Data are stored in `output_data/`, the folder is created if missing.
