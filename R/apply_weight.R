@@ -9,7 +9,7 @@
 apply_weight <- function() {
   ### read weightings
   weights <- path_input_data("Co_author_weightings.csv") |>
-    readr::read_csv()
+    readr::read_csv(show_col_types = FALSE)
 
   med_weights <- weights |>
     dplyr::select(-Co_author) |>
@@ -24,7 +24,7 @@ apply_weight <- function() {
   # Level 5 (no longer used)
   # priorities for Protected areas
   data5 <- path_input_data("Hybas5_data.csv") |>
-    readr::read_csv() |>
+    readr::read_csv(show_col_types = FALSE) |>
     dplyr::mutate(protection_score = WSI_n * med_weights$Weight[1] +
       FBCI_n * med_weights$Weight[2] +
       CCI_n * med_weights$Weight[3] +
@@ -80,9 +80,8 @@ apply_weight <- function() {
 
   # -----------------------------------------------------------------
   # Level 6
-
   data6 <- path_input_data("Hybas6_data.csv") |>
-    readr::read_csv() |>
+    readr::read_csv(show_col_types = FALSE) |>
     # priorities for Protected areas
     dplyr::mutate(protection_score = WSI_n * med_weights$Weight[1] +
       FBCI_n * med_weights$Weight[2] +

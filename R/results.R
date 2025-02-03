@@ -28,22 +28,22 @@ get_results <- function() {
     maxrank <- max(map6$Prot_rank_feow - 1)
     map6 <- map6 |>
         dplyr::group_by(FEOW_ID) |>
-        dplyr::mutate(Prot_rank_feow_scaled = ((Prot_rank_feow - 1) * maxrank / max(Prot_rank_feow - 1)) + 1)
+        dplyr::mutate(Prot_rank_feow_scaled = scale_rank(Prot_rank_feow))
 
     maxrank <- max(map6$Rest_rank_feow - 1)
     map6 <- map6 |>
         dplyr::group_by(FEOW_ID) |>
-        dplyr::mutate(Rest_rank_feow_scaled = ((Rest_rank_feow - 1) * maxrank / max(Rest_rank_feow - 1)) + 1)
+        dplyr::mutate(Rest_rank_feow_scaled = scale_rank(Rest_rank_feow))
 
     maxrank <- max(map6$SAR_rank_feow - 1)
     map6 <- map6 |>
         dplyr::group_by(FEOW_ID) |>
-        dplyr::mutate(SAR_rank_feow_scaled = ((SAR_rank_feow - 1) * maxrank / max(SAR_rank_feow - 1)) + 1)
+        dplyr::mutate(SAR_rank_feow_scaled = scale_rank(SAR_rank_feow))
 
     maxrank <- max(map6$AIS_rank_feow - 1)
     map6 <- map6 |>
         dplyr::group_by(FEOW_ID) |>
-        dplyr::mutate(AIS_rank_feow_scaled = ((AIS_rank_feow - 1) * maxrank / max(AIS_rank_feow - 1)) + 1)
+        dplyr::mutate(AIS_rank_feow_scaled = scale_rank(AIS_rank_feow))
     cli::cli_progress_done()
 
 

@@ -1,8 +1,8 @@
 Package: watershedPrioritization
 Type: Package
 Title: Priortize Watersheds Within Canada
-Date: 2025-01-08
-Version: 0.0.0.9001
+Date: 2025-02-03
+Version: 0.0.0.9002
 Authors@R: c(
     person("Cindy", "Chu", email = "Cindy.Chu@dfo-mpo.gc.ca", role = c("aut", "cre")),
     person("inSileco Inc", comment = "https://insileco.io/", role = c("aut"))
@@ -37,7 +37,8 @@ Suggests:
     shiny (>= 1.9.1),
     shinyWidgets (>= 0.8.7),
     shinybusy (>= 0.3.3),
-    shinythemes (>= 1.2.0)
+    shinythemes (>= 1.2.0),
+    testthat (>= 3.0.0)
 RoxygenNote: 7.3.2
 LazyLoad: yes
 Config/testthat/edition: 3

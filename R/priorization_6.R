@@ -6,32 +6,38 @@
 #' @export
 
 priorization_6 <- function() {
-    data6 <- path_input_data("HyC_6_df.csv") |>
-        readr::read_csv() |>
-        dplyr::select(
-            HYBAS_ID,
-            MEAN_INT_1, # WSI measures
-            rcp45_55
-        ) |> ## Climate measure
+    ws_data <- path_input_data("Variable_data_20241018.xlsx")
+    data6 <- ws_data |>
+        readxl::read_xlsx(sheet = "H6_climate") |>
+        dplyr::select(HYBAS6_ID, Climate, Stress) |>
+        dplyr::rename(HYBAS_ID = HYBAS6_ID) |>
+        # path_input_data("HyC_6_df.csv") |>
+        # readr::read_csv() |>
+        # dplyr::select(
+        #     HYBAS_ID,
+        #     MEAN_INT_1, # WSI measures
+        #     rcp45_55
+        # ) |> ## Climate measure
         ## Fish community importance and priority data
         dplyr::left_join(
             path_input_data("H6_importance_priority.csv") |>
-                readr::read_csv() |>
+                readr::read_csv(show_col_types = FALSE) |>
                 dplyr::select(-Ii),
             by = "HYBAS_ID"
         ) |>
         ## FCBI
         dplyr::left_join(
-            path_input_data("FBCI_level6_270123.csv") |>
-                readr::read_csv() |>
-                dplyr::select(HYBAS_ID, Jaccard.D),
+            ws_data |>
+                readxl::read_xlsx(sheet = "H6FishChange") |>
+                dplyr::select(HYBAS6_ID, Jaccard.D) |>
+                dplyr::rename(HYBAS_ID = HYBAS6_ID),
             by = "HYBAS_ID"
         )
 
     ###########
     # Calculate SARI and Richness
     fishPA6 <- path_input_data("Spp_dist_HYBAS6_20230125.csv") |>
-        readr::read_csv()
+        readr::read_csv(show_col_types = FALSE)
     # remove hydrobasin id name
     fishPA6_nohbid <- fishPA6 |>
         dplyr::select(-c(HYBAS_ID))
@@ -76,7 +82,7 @@ priorization_6 <- function() {
     data6 <- data6 |>
         dplyr::left_join(
             path_input_data("hyc_6_feow_join.csv") |>
-                readr::read_csv(),
+                readr::read_csv(show_col_types = FALSE),
             by = "HYBAS_ID"
         )
 
@@ -93,7 +99,3 @@ priorization_6 <- function() {
     )
 }
 
-# helper function
-scale_min_max <- function(x) {
-    100 * (x - min(x)) / (max(x) - min(x))
-}
