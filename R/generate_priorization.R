@@ -31,9 +31,9 @@
 #'
 #' @export
 
-priorization <- function() {
+generate_priorization_data <- function() {
     ws_data <- path_input_data("Variable_data_20241018.xlsx")
-    data6 <- ws_data |>
+    df_prio <- ws_data |>
         readxl::read_xlsx(sheet = "H6_climate") |>
         dplyr::select(HYBAS6_ID, Stress, Climate) |>
         dplyr::rename(
@@ -75,15 +75,15 @@ priorization <- function() {
             Fish_richness = rowSums(fishPA6_nohbid > 0)
         )
 
-    ### Join with data6
-    data6 <- data6 |>
+    ### Join with df_prio
+    df_prio <- df_prio |>
         dplyr::left_join(
             fishPA6 |>
                 dplyr::select(HYBAS_ID, SARI, Fish_richness),
             by = "HYBAS_ID"
         )
 
-    data6 <- data6 |>
+    df_prio <- df_prio |>
         # check and remove NA
         dplyr::filter(
             !is.na(FBCI),
@@ -108,9 +108,15 @@ priorization <- function() {
                 readr::read_csv(show_col_types = FALSE),
             by = "HYBAS_ID"
         )
+    
+    # write csv file
+    readr::write_csv(
+        df_prio,
+        path_output_data("watershed_prioritization_no_weight.csv")
+    )
 
     # select final columns
-    data6 |> dplyr::select(
+    df_prio |> dplyr::select(
         HYBAS_ID,
         FEOW_ID,
         WSI_n,

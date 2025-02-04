@@ -4,18 +4,18 @@
 #' 
 #' @export
 
-run_pipeline <- function() {
-    #------------------------
-    cli::cli_progress_step("applying weight")
-    suppressMessages(apply_weight())
-    cli::cli_progress_done()
-    #------------------------
-    cli::cli_progress_step("Compute rarity index")
-    suppressMessages(compute_rarity_index())
+run_pipeline <- function() {    
+    #------------------------ (not used - data are in extdata)
+    cli::cli_progress_step("Compute fish priority index")
+    suppressMessages(compute_fish_priority_index())
     cli::cli_progress_done()
     #------------------------
     cli::cli_progress_step("Generate Priorization data set")
-    suppressMessages(priorization())
+    suppressMessages(generate_priorization_data())
+    cli::cli_progress_done()
+    #------------------------
+    cli::cli_progress_step("Applying co-author weight")
+    suppressMessages(apply_weight())
     cli::cli_progress_done()
     #------------------------
     cli::cli_progress_step("Scaling")

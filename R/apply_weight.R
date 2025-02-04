@@ -1,4 +1,10 @@
 #' Applying expert weight
+#' 
+#' Median values of expert weights used to generate weighted-scores for:
+#' * Area-based protection 
+#' * Restoration
+#' * SAR management 
+#' * Invasive species management 
 #'
 #' @return
 #'  write `watershed_prioritization_level6.csv`
@@ -19,11 +25,13 @@ apply_weight <- function() {
       values_to = "Weight"
     )
 
-  data6 <- path_input_data("Hybas6_data.csv") |>
+  # require to execute generate_priorization_data()
+  df_prio_w <- path_output_data("watershed_prioritization_no_weight.csv") |>
     readr::read_csv(show_col_types = FALSE) |>
     # priorities for Protected areas
     dplyr::mutate(
-      protection_score = WSI_n * med_weights$Weight[1] +
+      protection_score =
+        WSI_n * med_weights$Weight[1] +
         FBCI_n * med_weights$Weight[2] +
         CCI_n * med_weights$Weight[3] +
         SARI_n * med_weights$Weight[4] +
@@ -74,12 +82,12 @@ apply_weight <- function() {
     dplyr::arrange(FEOW_ID, -AIS_score) |>
     dplyr::group_by(FEOW_ID) |>
     dplyr::mutate(AIS_rank_feow = dplyr::row_number())
-
+  
   # write csv file
   readr::write_csv(
-    data6,
+    df_prio_w,
     path_output_data("watershed_prioritization_level6.csv")
   )
 
-  data6
+  df_prio_w
 }

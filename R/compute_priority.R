@@ -11,7 +11,7 @@
 #'
 #' @export
 
-compute_rarity_index <- function() {
+compute_fish_priority_index <- function() {
     fishPA6 <- path_input_data("Spp_dist_HYBAS6_20230125.csv") |>
         readr::read_csv()
 

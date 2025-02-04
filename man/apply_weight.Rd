@@ -10,5 +10,11 @@ apply_weight()
 write \code{watershed_prioritization_level6.csv}
 }
 \description{
-Applying expert weight
+Median values of expert weights used to generate weighted-scores for:
+\itemize{
+\item Area-based protection
+\item Restoration
+\item SAR management
+\item Invasive species management
+}
 }
