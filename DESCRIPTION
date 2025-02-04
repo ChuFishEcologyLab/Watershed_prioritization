@@ -15,15 +15,12 @@ Roxygen: list(markdown = TRUE)
 Depends:
     R (>= 4.2)
 Imports:
-	GGally (>= 2.2.1),
     cli (>= 3.6.3),
 	dplyr (>= 1.1.4),
 	fs (>= 1.6.5),
 	ggbeeswarm (>= 0.7.2),
-	ggmap (>= 4.0.0),
 	ggplot2 (>= 3.5.1),
 	ggpubr (>= 0.6.0),
-	ggspatial (>= 1.1.9),
     purrr (>= 1.0.2),
 	readr (>= 2.1.5),
 	readxl (>= 1.4.3),

@@ -32,6 +32,7 @@
 #' @export
 
 generate_priorization_data <- function() {
+    #------------ Climate and stress data
     ws_data <- path_input_data("Variable_data_20241018.xlsx")
     df_prio <- ws_data |>
         readxl::read_xlsx(sheet = "H6_climate") |>
@@ -41,7 +42,7 @@ generate_priorization_data <- function() {
             CCI = Climate,
             WSI = Stress
         ) |>
-        ## Fish community importance and priority data
+        #------------ Fish community importance and priority data
         dplyr::left_join(
             path_input_data("H6_importance_priority.csv") |>
                 readr::read_csv(show_col_types = FALSE) |>
@@ -49,7 +50,7 @@ generate_priorization_data <- function() {
                 dplyr::rename(Fish_priority = Qi),
             by = "HYBAS_ID"
         ) |>
-        ## FCBI
+        #------------ Fish biodiversity
         dplyr::left_join(
             ws_data |>
                 readxl::read_xlsx(sheet = "H6FishChange") |>
@@ -59,29 +60,38 @@ generate_priorization_data <- function() {
                     FBCI = Jaccard.D
                 ),
             by = "HYBAS_ID"
+        ) |>
+        #------------ Protected Area overlap
+        dplyr::left_join(
+            path_input_data("protected_area_overlap.csv") |>
+                readr::read_csv(show_col_types = FALSE) |>
+                dplyr::select(HYBAS_ID, perc_overlap) |>
+                dplyr::rename(
+                    Protected_area = perc_overlap
+                ),
+            by = "HYBAS_ID"
         )
 
-    ###########
-    # Calculate SARI and Richness
+    #------------ Calculate SARI and Richness
     fishPA6 <- path_input_data("Spp_dist_HYBAS6_20230125.csv") |>
         readr::read_csv(show_col_types = FALSE)
     # remove hydrobasin id name
     fishPA6_nohbid <- fishPA6 |>
         dplyr::select(-c(HYBAS_ID))
-
     fishPA6 <- fishPA6 |>
         dplyr::mutate(
             SARI = rowSums(fishPA6_nohbid == 2),
             Fish_richness = rowSums(fishPA6_nohbid > 0)
         )
-
-    ### Join with df_prio
+    # join with df_prio
     df_prio <- df_prio |>
         dplyr::left_join(
             fishPA6 |>
                 dplyr::select(HYBAS_ID, SARI, Fish_richness),
             by = "HYBAS_ID"
         )
+
+
 
     df_prio <- df_prio |>
         # check and remove NA
@@ -90,6 +100,7 @@ generate_priorization_data <- function() {
             !is.na(WSI),
             !is.na(CCI),
             !is.na(Fish_priority),
+            !is.na(Protected_area),
             !is.na(SARI),
             !is.na(Fish_richness)
         ) |>
@@ -99,6 +110,7 @@ generate_priorization_data <- function() {
             WSI_n = scale_min_max(WSI),
             CCI_n = scale_min_max(CCI),
             Priority_n = scale_min_max(Fish_priority),
+            Protected_area_n = scale_min_max(Protected_area),
             SARI_n = scale_min_max(SARI),
             Fish_richness_n = scale_min_max(Fish_richness)
         ) |>
@@ -108,7 +120,7 @@ generate_priorization_data <- function() {
                 readr::read_csv(show_col_types = FALSE),
             by = "HYBAS_ID"
         )
-    
+
     # write csv file
     readr::write_csv(
         df_prio,
@@ -123,6 +135,7 @@ generate_priorization_data <- function() {
         FBCI_n,
         CCI_n,
         SARI_n,
+        Protected_area_n,
         Fish_richness_n,
         Priority_n
     )

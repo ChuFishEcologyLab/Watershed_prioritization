@@ -3,3 +3,4 @@
 ^figs$
 ^LICENSE\.md$
 ^\.vscode$
+^inst/extdata/ProtectedAreas$
