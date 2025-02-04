@@ -7,5 +7,11 @@
 feow_scaling()
 }
 \description{
-FEOW scaling
+Scaling ranks level 6 hydrobasins within canadian FEOWs (Freshwater
+Ecoregions of the World).
+}
+\details{
+The scaling enables comparison between regions, considering that regions
+have varying numbers of watersheds and, consequently, different value ranges
+for ranking.
 }

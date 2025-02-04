@@ -7,8 +7,7 @@
 apply_weight()
 }
 \value{
-Writes \code{watershed_prioritization_level5.csv} and
-\code{watershed_prioritization_level6.csv}
+write \code{watershed_prioritization_level6.csv}
 }
 \description{
 Applying expert weight

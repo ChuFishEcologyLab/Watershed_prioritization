@@ -9,3 +9,14 @@ compute_rarity_index()
 \description{
 Calculate rarity indices
 }
+\details{
+Calculation based on Q index in Minns (1987).
+}
+\references{
+\itemize{
+\item Minns, C. K. 'A Method of Ranking Species and Sites for Conservation Using
+Presence-Absence Data and Its Application to Native Freshwater Fish in New
+Zealand. New Zealand Journal of Zoology 14, no. 1 (January 1987): 43–49.
+https://doi.org/10.1080/03014223.1987.10422680.
+}
+}

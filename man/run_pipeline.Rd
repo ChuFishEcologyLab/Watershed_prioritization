@@ -7,5 +7,5 @@
 run_pipeline()
 }
 \description{
-Pipeline
+This function runs all the steps the reproduce the analysis.
 }
