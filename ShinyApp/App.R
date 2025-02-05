@@ -22,7 +22,7 @@ ui <- navbarPage(
         splitLayout(
           selectInput(
             inputId = "scale", label = "Watershed scale",
-            choices = c("Hydrobasin level 5", "Hydrobasin level 6")
+            choices = c("Hydrobasin level 5", "Hydrobasin level 6", "Lake Erie")
           ),
           selectInput(inputId = "objective", label = "Weighting schema", choices = c(
             "Custom", "Area-based protection", "Restoration", "SAR management", "AIS management"
