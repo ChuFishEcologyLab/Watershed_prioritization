@@ -146,6 +146,7 @@ server <- function(input, output, session) {
           updateWhenIdle = TRUE # map won't load new tiles when panning
         )
       ) |>
+      leafem::addMouseCoordinates() |>
       fitBounds(lat1 = 43, lng1 = -143, lat2 = 75, lng2 = -50)
   })
 
@@ -255,6 +256,7 @@ server <- function(input, output, session) {
   #
   map5 <- sf::read_sf("s_map5.gpkg")
   map6 <- sf::read_sf("s_map6.gpkg")
+  mapl <- sf::read_sf("s_lakeerie.gpkg")
   feow <- sf::read_sf("s_feow.gpkg")
 
 
@@ -265,108 +267,129 @@ server <- function(input, output, session) {
     if (input$scale == "Hydrobasin level 5") {
       map <- map5
       data <- data5
-    } else {
+    } else if (input$scale == "Hydrobasin level 6") {
       map <- map6
       data <- data6
+    } else {
+      map <- mapl
     }
+    bbox <- sf::st_bbox(map)
+    print(bbox)
 
     # calculate the ranks based on user input weightings
-    data <- data |>
-      dplyr::mutate(
-        score =
-          WSI_n * input$WSI +
-            FBCI_n * input$FBCI +
-            CCI_n * input$CCI +
-            SARI_n * input$SARI +
-            Fish_richness_n * input$Richness +
-            Priority_n * input$Q
-      )
-
-    if (!input$regional) {
-      data <- data |>
-        dplyr::mutate(watershed_rank = rank(-score))
+    if (input$scale == "Lake Erie") {
+      leafletProxy("map") |>
+        clearGroup(group = "watersheds") |>
+        clearShapes() |>
+        clearControls() |>
+        leafem::addMouseCoordinates() |>
+        addPolygons(
+          data = map
+        ) |>
+        leaflet::setView(
+          lng = mean(bbox[c(1, 3)]),
+          lat = mean(bbox[c(2, 4)]),
+          zoom = 8
+        )
     } else {
       data <- data |>
-        dplyr::arrange(FEOW_ID, -score) |>
-        dplyr::group_by(FEOW_ID) |>
-        dplyr::mutate(watershed_rank = dplyr::row_number())
-
-      # convert to relative ranks
-      maxrank <- max(data$watershed_rank - 1)
-      data <- data |>
-        dplyr::group_by(FEOW_ID) |>
-        dplyr::mutate(watershed_rank = ((watershed_rank - 1) * maxrank / max(watershed_rank - 1)) + 1)
-
-      data$watershed_rank[which(is.nan(data$watershed_rank))] <- (maxrank + 1) / 2 # if there is only 1 watershed in feow
-    }
-
-    pal <- viridis::viridis(max(data$watershed_rank),
-      option = "magma",
-      direction = -1,
-      end = 0.9
-    )
-
-    data$wsh_fill <- pal[data$watershed_rank]
-
-    # join the data with the map
-    # map = map |> select(HYBAS_ID, geometry)
-    map <- map |>
-      dplyr::select(HYBAS_ID, geom) |>
-      dplyr::left_join(data, by = "HYBAS_ID")
-
-    # popup labels for watersheds
-    wsh_labels <- lapply(seq(nrow(map)), function(i) {
-      paste0(
-        "Watershed stress: ", round(map$WSI_n[i], 2), "<br>",
-        "SAR richness: ", round(map$SARI_n[i], 2), "<br>",
-        "Fish species richness: ", round(map$Fish_richness_n[i], 2), "<br>",
-        "Biodiversity change: ", round(map$FBCI_n[i], 2), "<br>",
-        "Fish rarity: ", round(map$Priority_n[i], 2), "<br>",
-        "Climate change: ", round(map$CCI_n[i], 2), "<br>"
-      )
-    })
-
-
-    # map it
-    leafletProxy("map") |>
-      clearGroup(group = "watersheds") |>
-      clearShapes() |>
-      clearControls() |>
-      addPolygons(
-        data = map,
-        fillColor = map$wsh_fill,
-        color = map$wsh_fill,
-        opacity = 0.6,
-        weight = 2,
-        group = "Watersheds",
-        label = lapply(wsh_labels, htmltools::HTML),
-        fillOpacity = 0.8,
-        highlightOptions = highlightOptions(
-          color = "white", weight = 2,
-          bringToFront = TRUE
+        dplyr::mutate(
+          score =
+            WSI_n * input$WSI +
+              FBCI_n * input$FBCI +
+              CCI_n * input$CCI +
+              SARI_n * input$SARI +
+              Fish_richness_n * input$Richness +
+              Priority_n * input$Q
         )
-      ) |>
-      addPolygons(
-        data = feow,
-        color = "black",
-        weight = 3,
-        fillColor = "transparent",
-        fillOpacity = 0,
-        group = "Ecoregions",
-        opacity = 1
-      ) |>
-      hideGroup(group = "Ecoregions") |>
-      addLegend(
-        colors = viridis::viridis(9, alpha = 1, end = 0.9, direction = -1, option = "magma"),
-        labels = c("high", rep("", 7), "low"),
-        title = "Priority", group = "watersheds"
-      ) |>
-      addLayersControl(
-        overlayGroups = c("Watersheds", "Ecoregions"),
-        position = "bottomright",
-        options = layersControlOptions(collapsed = FALSE)
+
+      if (!input$regional) {
+        data <- data |>
+          dplyr::mutate(watershed_rank = rank(-score))
+      } else {
+        data <- data |>
+          dplyr::arrange(FEOW_ID, -score) |>
+          dplyr::group_by(FEOW_ID) |>
+          dplyr::mutate(watershed_rank = dplyr::row_number())
+
+        # convert to relative ranks
+        maxrank <- max(data$watershed_rank - 1)
+        data <- data |>
+          dplyr::group_by(FEOW_ID) |>
+          dplyr::mutate(watershed_rank = ((watershed_rank - 1) * maxrank / max(watershed_rank - 1)) + 1)
+
+        data$watershed_rank[which(is.nan(data$watershed_rank))] <- (maxrank + 1) / 2 # if there is only 1 watershed in feow
+      }
+
+
+      pal <- viridis::viridis(max(data$watershed_rank),
+        option = "magma",
+        direction = -1,
+        end = 0.9
       )
 
+      data$wsh_fill <- pal[data$watershed_rank]
+
+      # join the data with the map
+      # map = map |> select(HYBAS_ID, geometry)
+      map <- map |>
+        dplyr::select(HYBAS_ID, geom) |>
+        dplyr::left_join(data, by = "HYBAS_ID")
+
+      # popup labels for watersheds
+      wsh_labels <- lapply(seq(nrow(map)), function(i) {
+        paste0(
+          "Watershed stress: ", round(map$WSI_n[i], 2), "<br>",
+          "SAR richness: ", round(map$SARI_n[i], 2), "<br>",
+          "Fish species richness: ", round(map$Fish_richness_n[i], 2), "<br>",
+          "Biodiversity change: ", round(map$FBCI_n[i], 2), "<br>",
+          "Fish rarity: ", round(map$Priority_n[i], 2), "<br>",
+          "Climate change: ", round(map$CCI_n[i], 2), "<br>"
+        )
+      })
+
+
+      # map it
+      leafletProxy("map") |>
+        clearGroup(group = "watersheds") |>
+        clearShapes() |>
+        clearControls() |>
+        addPolygons(
+          data = map,
+          fillColor = map$wsh_fill,
+          color = map$wsh_fill,
+          opacity = 0.6,
+          weight = 2,
+          group = "Watersheds",
+          label = lapply(wsh_labels, htmltools::HTML),
+          fillOpacity = 0.8,
+          highlightOptions = highlightOptions(
+            color = "white", weight = 2,
+            bringToFront = TRUE
+          )
+        ) |>
+        addPolygons(
+          data = feow,
+          color = "black",
+          weight = 3,
+          fillColor = "transparent",
+          fillOpacity = 0,
+          group = "Ecoregions",
+          opacity = 1
+        ) |>
+        hideGroup(group = "Ecoregions") |>
+        addLegend(
+          colors = viridis::viridis(9, alpha = 1, end = 0.9, direction = -1, option = "magma"),
+          labels = c("high", rep("", 7), "low"),
+          title = "Priority", group = "watersheds"
+        ) |>
+        addLayersControl(
+          overlayGroups = c("Watersheds", "Ecoregions"),
+          position = "bottomright",
+          options = layersControlOptions(collapsed = FALSE)
+        ) |>
+        fitBounds(lat1 = 43, lng1 = -143, lat2 = 75, lng2 = -50)
+    }
     remove_modal_spinner() # remove it when done
   }) # end of 'go' button
 } # end of server

@@ -10,7 +10,7 @@ compute_fish_priority_index()
 Calculate rarity indices
 }
 \details{
-Calculation based on I and Q indices in Minns (1987).
+Compute I and Q indices in Minns (1987).
 }
 \references{
 \itemize{
