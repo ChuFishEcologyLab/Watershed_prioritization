@@ -46,38 +46,38 @@ run_lake_erie_analysis <- function(parameters) {
                 dplyr::rename(Fish_priority = Qi),
             by = "H12"
         ) |>
-    #----------- Protected area 2BDone missing old assemblage.
-    #---------- Rename columns
-    dplyr::rename(
-        HYBAS_ID = H12,
-        CCI = H12FwVel2452050, 
-        WSI = H12CuThreat,
-        SARI = H12CountFishMusselSAR
-     )
+        #----------- Protected area 2BDone missing old assemblage.
+        #---------- Rename columns
+        dplyr::rename(
+            HYBAS_ID = H12,
+            CCI = H12FwVel2452050,
+            WSI = H12CuThreat,
+            SARI = H12CountFishMusselSAR
+        )
 
     le_data <- le_data |>
         # check and remove NA
         dplyr::filter(
-            #!is.na(FBCI),
+            # !is.na(FBCI),
             !is.na(WSI),
             !is.na(CCI),
             !is.na(Fish_priority),
-            #!is.na(Protected_area),
+            # !is.na(Protected_area),
             !is.na(SARI),
             !is.na(Fish_richness)
         ) |>
         # Normalizing indices
         dplyr::mutate(
-            #FBCI_n = scale_min_max(FBCI),
+            # FBCI_n = scale_min_max(FBCI),
             WSI_n = scale_min_max(WSI),
             CCI_n = scale_min_max(CCI),
             Priority_n = scale_min_max(Fish_priority),
-            #Protected_area_n = scale_min_max(Protected_area),
+            # Protected_area_n = scale_min_max(Protected_area),
             SARI_n = scale_min_max(SARI),
             Fish_richness_n = scale_min_max(Fish_richness)
         )
-        ## Join with H6? or FEOW_ID
-        
+    ## Join with H6? or FEOW_ID
+
 
     # write csv file
     readr::write_csv(
@@ -88,7 +88,7 @@ run_lake_erie_analysis <- function(parameters) {
     # select final columns
     le_data |> dplyr::select(
         HYBAS_ID,
-        #FEOW_ID,
+        # FEOW_ID,
         WSI_n,
         # FBCI_n,
         CCI_n,
