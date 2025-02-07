@@ -1,13 +1,13 @@
-#' Watershed priorization data set for Canada
+#' Watershed priorization dataset for Canada
 #'
 #' Generate a watershed prioritization dataset for the Lake Erie watershed.
-#' The dataset includes seven normalized variables used to prioritize watershed 
+#' The dataset includes seven normalized variables used to prioritize watershed
 #' conservation.
-#' 
+#'
 #' @details
 #' Note that raw data are embeded in the R package in `extdata` folder.
-#' The scaling (variables are normalized) enables comparison between regions, 
-#' considering that regions have varying numbers of watersheds and, 
+#' The scaling (variables are normalized) enables comparison between regions,
+#' considering that regions have varying numbers of watersheds and,
 #' consequently, different value ranges for ranking.
 #'
 #' @return
@@ -42,11 +42,15 @@
 #' @export
 
 generate_canada_dataset <- function() {
+    #------------ Loading presence/absence
     can_pa <- path_input_data("Spp_dist_HYBAS6_20230125.csv") |>
         readr::read_csv(show_col_types = FALSE)
+    can_pa_mat <- can_pa |>
+        dplyr::select(-HYBAS_ID) |>
+        as.matrix()
     #------------ Climate and stress data
-    ws_data <- path_input_data("Variable_data_20241018.xlsx")
-    df_prio <- ws_data |>
+    ws_data_path <- path_input_data("Variable_data_20241018.xlsx")
+    can_data <- ws_data_path |>
         readxl::read_xlsx(sheet = "H6_climate") |>
         dplyr::select(HYBAS6_ID, Stress, Climate) |>
         dplyr::rename(
@@ -59,18 +63,13 @@ generate_canada_dataset <- function() {
             cbind(
                 can_pa |>
                     dplyr::select(HYBAS_ID),
-                compute_minns_Q_I(
-                    can_pa |>
-                        dplyr::select(-HYBAS_ID) |>
-                        as.matrix()
-                ) |>
-                    dplyr::select(Qi)
+                compute_minns_Q_I(can_pa_mat)
             ) |> dplyr::rename(Fish_priority = Qi),
             by = "HYBAS_ID"
         ) |>
         #------------ Fish biodiversity
         dplyr::left_join(
-            ws_data |>
+            ws_data_path |>
                 readxl::read_xlsx(sheet = "H6FishChange") |>
                 dplyr::select(HYBAS6_ID, Jaccard.D) |>
                 dplyr::rename(
@@ -89,30 +88,17 @@ generate_canada_dataset <- function() {
                     Protected_area = perc_overlap
                 ),
             by = "HYBAS_ID"
-        )
-
-    #------------ Calculate SARI and Richness
-    fishPA6 <- path_input_data("Spp_dist_HYBAS6_20230125.csv") |>
-        readr::read_csv(show_col_types = FALSE)
-    # remove hydrobasin id name
-    fishPA6_nohbid <- fishPA6 |>
-        dplyr::select(-c(HYBAS_ID))
-    fishPA6 <- fishPA6 |>
-        dplyr::mutate(
-            SARI = rowSums(fishPA6_nohbid == 2),
-            Fish_richness = rowSums(fishPA6_nohbid > 0)
-        )
-    # join with df_prio
-    df_prio <- df_prio |>
-        dplyr::left_join(
-            fishPA6 |>
-                dplyr::select(HYBAS_ID, SARI, Fish_richness),
-            by = "HYBAS_ID"
-        )
-
-
-    df_prio <- df_prio |>
-        # check and remove NA
+        ) |>
+        #------------ Calculate SARI and Richness
+        dplyr::left_join(cbind(
+            can_pa |>
+                dplyr::select(HYBAS_ID),
+            data.frame(
+                SARI = rowSums(can_pa_mat == 2),
+                Fish_richness = rowSums(can_pa_mat > 0)
+            )
+        ), by = "HYBAS_ID") |>
+        #------------ Remove NA (3 extra watersheds introduces in one file)
         dplyr::filter(
             !is.na(FBCI),
             !is.na(WSI),
@@ -122,7 +108,7 @@ generate_canada_dataset <- function() {
             !is.na(SARI),
             !is.na(Fish_richness)
         ) |>
-        # Normalizing indices
+        #------------ Normalizing indices
         dplyr::mutate(
             FBCI_n = scale_min_max(FBCI),
             WSI_n = scale_min_max(WSI),
@@ -132,29 +118,13 @@ generate_canada_dataset <- function() {
             SARI_n = scale_min_max(SARI),
             Fish_richness_n = scale_min_max(Fish_richness)
         ) |>
-        # join with feow
+        # ------------ Joining with feow
         dplyr::left_join(
             path_input_data("hyc_6_feow_join.csv") |>
                 readr::read_csv(show_col_types = FALSE),
             by = "HYBAS_ID"
-        )
+        ) |>
+        dplyr::relocate(FEOW_ID, .after = HYBAS_ID)
 
-    # write csv file
-    readr::write_csv(
-        df_prio,
-        path_output_data("watershed_prioritization_no_weight.csv")
-    )
-
-    # select final columns
-    df_prio |> dplyr::select(
-        HYBAS_ID,
-        FEOW_ID,
-        WSI_n,
-        FBCI_n,
-        CCI_n,
-        SARI_n,
-        Fish_richness_n,
-        Priority_n,
-        Protected_area_n
-    )
+    can_data
 }

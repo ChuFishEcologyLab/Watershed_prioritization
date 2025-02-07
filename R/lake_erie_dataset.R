@@ -1,9 +1,9 @@
 #' Watershed priorization data set for Lake Erie
 #'
 #' Generate a watershed prioritization dataset for the Lake Erie watershed.
-#' The dataset includes six normalized variables used to prioritize watershed 
+#' The dataset includes six normalized variables used to prioritize watershed
 #' conservation.
-#' 
+#'
 #' @details
 #' Note that raw data are embeded in the R package in `extdata` folder.
 #' The scaling (variables are normalized) enables comparison between regions,
@@ -35,23 +35,23 @@
 #' Presence-Absence Data and Its Application to Native Freshwater Fish in New
 #' Zealand. New Zealand Journal of Zoology 14, no. 1 (January 1987): 43–49.
 #' https://doi.org/10.1080/03014223.1987.10422680.
-#' 
+#'
 #'
 #' @export
 
-generate_lake_erie_dataset <- function(parameters) {
+generate_lake_erie_dataset <- function() {
     #------------ Loading presence/absence
-    le_pa <- path_input_data("H12LakeErie/LEH12_native_nonnative.xlsx") |>
+    le_pa <- path_input_data("LEH12_native_nonnative.xlsx", lvl = "H12_LakeErie") |>
         readxl::read_xlsx(sheet = "LEH12Fishnative_non-native")
     le_pa_mat <- le_pa |>
         dplyr::select(-H12) |>
         as.matrix()
     #------------ Climate velocity
-    le_data <- path_input_data("H12LakeErie/LEH12_wpdata.xlsx") |>
+    le_data <- path_input_data("LEH12_wpdata.xlsx", lvl = "H12_LakeErie") |>
         readxl::read_xlsx(sheet = "LEH12_CCdata") |>
         #------------ Stress data
         dplyr::inner_join(
-            path_input_data("H12LakeErie/LEH12_wpdata.xlsx") |>
+            path_input_data("LEH12_wpdata.xlsx", lvl = "H12_LakeErie") |>
                 readxl::read_xlsx(sheet = "LEH12_WSIdata"),
             by = "H12"
         ) |>
@@ -64,7 +64,7 @@ generate_lake_erie_dataset <- function(parameters) {
         ) |>
         #------------ SARI
         dplyr::inner_join(
-            path_input_data("H12LakeErie/LEH12_wpdata.xlsx") |>
+            path_input_data("LEH12_wpdata.xlsx", lvl = "H12_LakeErie") |>
                 readxl::read_xlsx(sheet = "LEH12FishSAR"),
             by = "H12"
         ) |>
@@ -93,15 +93,6 @@ generate_lake_erie_dataset <- function(parameters) {
         )
 
     le_data <- le_data |>
-        # check and remove NA
-        dplyr::filter(
-            # !is.na(FBCI),
-            !is.na(WSI),
-            !is.na(CCI),
-            !is.na(Fish_priority),
-            !is.na(SARI),
-            !is.na(Fish_richness)
-        ) |>
         # Normalizing indices
         dplyr::mutate(
             FBCI_n = scale_min_max(FBCI),
@@ -116,20 +107,10 @@ generate_lake_erie_dataset <- function(parameters) {
     # write csv file
     readr::write_csv(
         le_data,
-        path_output_data("watershed_prioritization_le_no_weight.csv")
+        path_output_data("lake_erie_dataset.csv")
     )
 
-    # select final columns
-    le_data |> dplyr::select(
-        HYBAS_ID,
-        # FEOW_ID,
-        WSI_n,
-        FBCI_n,
-        CCI_n,
-        SARI_n,
-        Fish_richness_n,
-        Priority_n
-    )
+    le_data
 }
 
 # for every water, the function creates native vs non native assemblages

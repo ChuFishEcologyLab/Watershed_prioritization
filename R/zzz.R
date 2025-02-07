@@ -1,7 +1,7 @@
 # path helpers
 
-path_input_data <- function(filename) {
-    fs::path_package("watershedPrioritization", "extdata", filename)
+path_input_data <- function(filename, lvl = "H6_Canada") {
+    fs::path_package("watershedPrioritization", "extdata", lvl, filename)
 }
 
 path_output_data <- function(filename) {
@@ -14,6 +14,13 @@ path_output_fig <- function(filename) {
     fs::path("figs/v2", filename)
 }
 
+progress_step_fig <- function(id) {
+    cli::cli_progress_step(
+        cli::pluralize("now drawing fig {id}"),
+        cli::pluralize("fig {id} done"),
+        cli::pluralize("fig {id} failed")
+    )
+}
 
 # scaling helper
 scale_rank <- function(x, mx) {

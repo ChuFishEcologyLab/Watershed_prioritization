@@ -2,7 +2,7 @@
 % Please edit documentation in R/canada_dataset.R
 \name{generate_canada_dataset}
 \alias{generate_canada_dataset}
-\title{Watershed priorization data set for Canada}
+\title{Watershed priorization dataset for Canada}
 \usage{
 generate_canada_dataset()
 }

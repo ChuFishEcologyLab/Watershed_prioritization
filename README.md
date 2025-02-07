@@ -1,6 +1,5 @@
 # Watershed_prioritization
 
-
 This folder includes the data, analyses, and Shiny app built to visualize the results of efforts to priortize watersheds within Canada for four freshwater fish conservation objectives including: 
 - i) area-based protection; 
 - ii) habitat restoration; 
@@ -8,6 +7,19 @@ This folder includes the data, analyses, and Shiny app built to visualize the re
 - iv) invasive species management. 
 
 The prioritizations were based on national spatial data of the richness, rarity, and at-risk status of fishes, the amount of climate change and other watershed stressors, and the degree of fish community change (native vs. current species present within watershed). 
+
+
+## Structure of the repository 
+
+### R package 
+
+- `R/` code source
+- `man/` code source
+
+### Special
+
+- `inst/Analysis`: older version of analysis 
+- `inst/extdata`: data 
 
 
 ## Data 

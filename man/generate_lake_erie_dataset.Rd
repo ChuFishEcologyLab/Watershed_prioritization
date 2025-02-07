@@ -4,7 +4,7 @@
 \alias{generate_lake_erie_dataset}
 \title{Watershed priorization data set for Lake Erie}
 \usage{
-generate_lake_erie_dataset(parameters)
+generate_lake_erie_dataset()
 }
 \value{
 A data frame with the following columns:
