@@ -4,25 +4,27 @@
 #' 
 #' @export
 
-run_pipeline <- function() {    
-    #------------------------ (not used - data are in extdata)
-    cli::cli_progress_step("Compute fish priority index")
-    suppressMessages(compute_fish_priority_index())
-    cli::cli_progress_done()
+run_pipeline <- function() {   
+    # ======================== CANADA  
     #------------------------
-    cli::cli_progress_step("Generate Priorization data set")
-    suppressMessages(generate_priorization_data())
+    cli::cli_progress_step("Generate watershed priorization dataset for Canada")
+    suppressMessages(generate_canada_dataset())
     cli::cli_progress_done()
     #------------------------
     cli::cli_progress_step("Applying co-author weight")
     suppressMessages(apply_weight())
     cli::cli_progress_done()
     #------------------------
-    cli::cli_progress_step("Scaling")
-    suppressMessages(feow_scaling())
-    cli::cli_progress_done()
-    #------------------------
     cli::cli_progress_step("Results")
     get_results()
     cli::cli_progress_done()
+    #-----------------------
+
+    # ======================== Lake Erie
+    cli::cli_progress_step("Generate watershed priorization dataset for Lake Erie")
+    suppressMessages(generate_lake_erie_dataset())
+    cli::cli_progress_done()
+    #-----------------------
+
+
 }

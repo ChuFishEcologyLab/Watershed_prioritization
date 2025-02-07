@@ -1,7 +1,14 @@
-#' Generate prirization main data frame.
+#' Watershed priorization data set for Canada
 #'
+#' Generate a watershed prioritization dataset for the Lake Erie watershed.
+#' The dataset includes seven normalized variables used to prioritize watershed 
+#' conservation.
+#' 
 #' @details
 #' Note that raw data are embeded in the R package in `extdata` folder.
+#' The scaling (variables are normalized) enables comparison between regions, 
+#' considering that regions have varying numbers of watersheds and, 
+#' consequently, different value ranges for ranking.
 #'
 #' @return
 #' A data frame with the following columns:
@@ -16,6 +23,9 @@
 #' * Fish_richness_n: Species richness.
 #' * Priority_n: Index of priority based on Minns rarity index (1987).
 #' Bote that columns ending with `_n` are normalized.
+#' * Protected_area_n: Percentage of protected area overlap (capped at 100% if
+#' multiple types of protected areas overlap within the watershed, resulting in
+#' a total exceeding this limit).
 #'
 #'
 #' @references
@@ -31,7 +41,9 @@
 #'
 #' @export
 
-generate_priorization_data <- function() {
+generate_canada_dataset <- function() {
+    can_pa <- path_input_data("Spp_dist_HYBAS6_20230125.csv") |>
+        readr::read_csv(show_col_types = FALSE)
     #------------ Climate and stress data
     ws_data <- path_input_data("Variable_data_20241018.xlsx")
     df_prio <- ws_data |>
@@ -42,12 +54,18 @@ generate_priorization_data <- function() {
             CCI = Climate,
             WSI = Stress
         ) |>
-        #------------ Fish community importance and priority data
+        #------------ Fish community importance and priority data (Minns)
         dplyr::left_join(
-            path_input_data("H6_importance_priority.csv") |>
-                readr::read_csv(show_col_types = FALSE) |>
-                dplyr::select(-Ii) |>
-                dplyr::rename(Fish_priority = Qi),
+            cbind(
+                can_pa |>
+                    dplyr::select(HYBAS_ID),
+                compute_minns_Q_I(
+                    can_pa |>
+                        dplyr::select(-HYBAS_ID) |>
+                        as.matrix()
+                ) |>
+                    dplyr::select(Qi)
+            ) |> dplyr::rename(Fish_priority = Qi),
             by = "HYBAS_ID"
         ) |>
         #------------ Fish biodiversity
@@ -66,6 +84,7 @@ generate_priorization_data <- function() {
             path_input_data("protected_area_overlap.csv") |>
                 readr::read_csv(show_col_types = FALSE) |>
                 dplyr::select(HYBAS_ID, perc_overlap) |>
+                dplyr::mutate(perc_overlap = min(100, perc_overlap)) |> # cap
                 dplyr::rename(
                     Protected_area = perc_overlap
                 ),
@@ -90,7 +109,6 @@ generate_priorization_data <- function() {
                 dplyr::select(HYBAS_ID, SARI, Fish_richness),
             by = "HYBAS_ID"
         )
-
 
 
     df_prio <- df_prio |>
@@ -135,8 +153,8 @@ generate_priorization_data <- function() {
         FBCI_n,
         CCI_n,
         SARI_n,
-        Protected_area_n,
         Fish_richness_n,
-        Priority_n
+        Priority_n,
+        Protected_area_n
     )
 }
