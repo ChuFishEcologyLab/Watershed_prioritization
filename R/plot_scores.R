@@ -3,10 +3,12 @@
 #' Plot the four scores based on the six input variables used to compute the
 #' the priority score of watersheds.
 #'
-#' @param map Map that include the geometries of the watersheds along with the
-#' prioritization input variables (normalized).
+#' @param map `[sf]`\cr  Map that include the geometries of the watersheds
+#' along with the prioritization input variables (normalized).
 #' @param filename `[character string]`\cr Name of the output file (passed to
 #' [ggplot2::ggsave()]).
+#' 
+#' The function plots the figure and returns `TRUE` invisibly.
 #'
 #' @export
 #'
@@ -37,7 +39,7 @@ plot_scores <- function(map, filename = "national_priorities.png") {
         hjust = -0.25, vjust = 1.8,
         legend = "bottom"
     )
-    ggsave(path_output_fig("national_priorities.png"), width = 8.5, height = 6, units = "in", dpi = 300) # Open a new png file
+    ggsave(path_output_fig(filename), width = 8.5, height = 6, units = "in", dpi = 300) # Open a new png file
 }
 
 

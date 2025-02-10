@@ -10,11 +10,13 @@ plot_scores(map, filename = "national_priorities.png")
 plot_scores_feow(map, filename = "priorities_by_feow.png")
 }
 \arguments{
-\item{map}{Map that include the geometries of the watersheds along with the
-prioritization input variables (normalized).}
+\item{map}{\verb{[sf]}\cr  Map that include the geometries of the watersheds
+along with the prioritization input variables (normalized).}
 
 \item{filename}{\verb{[character string]}\cr Name of the output file (passed to
-\code{\link[ggplot2:ggsave]{ggplot2::ggsave()}}).}
+\code{\link[ggplot2:ggsave]{ggplot2::ggsave()}}).
+
+The function plots the figure and returns \code{TRUE} invisibly.}
 }
 \description{
 Plot the four scores based on the six input variables used to compute the

@@ -16,7 +16,7 @@
 #' be selected as priorities.
 #'
 #' @return
-#' The function plot the `TRUE` invisibly.
+#' The function plots the figure and returns `TRUE` invisibly.
 #'
 #' @export
 #'

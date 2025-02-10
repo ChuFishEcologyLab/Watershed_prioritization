@@ -3,11 +3,14 @@
 #' Plot the six input variables used to compute the the priority score of
 #' watersheds.
 #'
-#' @param map Map that include the geometries of the watersheds along with the
-#' prioritization input variables (normalized).
+#' @param map `[sf]`\cr  Map that include the geometries of the watersheds 
+#' along with the prioritization input variables (normalized).
 #' @param filename `[character string]`\cr Name of the output file (passed to
 #' [ggplot2::ggsave()]).
-#' 
+#'
+#' @return
+#' The function plots the figure and returns `TRUE` invisibly.
+#'
 #' @export
 #'
 #' @examples
@@ -17,7 +20,6 @@
 #'     spatialize_results() |>
 #'     plot_input_variables()
 #' }
-
 plot_input_variables <- function(map, filename = "normalized_index_values.png") {
     S2_A <- plot_variable(map, WSI_n)
     S2_B <- plot_variable(map, SARI_n)

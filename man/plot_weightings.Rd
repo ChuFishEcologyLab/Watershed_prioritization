@@ -11,7 +11,7 @@ plot_weightings(filename = "coauthor_weightings.png")
 \code{\link[ggplot2:ggsave]{ggplot2::ggsave()}}).}
 }
 \value{
-The function plot the \code{TRUE} invisibly.
+The function plots the figure and returns \code{TRUE} invisibly.
 }
 \description{
 Plot values for weighting each of six watershed indices towards four
