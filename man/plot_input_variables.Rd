@@ -11,8 +11,7 @@ plot_input_variables(map, filename = "normalized_index_values.png")
 prioritization input variables (normalized).}
 
 \item{filename}{\verb{[character string]}\cr Name of the output file (passed to
-\code{\link[ggplot2:ggsave]{ggplot2::ggsave()}}).
-#'}
+\code{\link[ggplot2:ggsave]{ggplot2::ggsave()}}).}
 }
 \description{
 Plot the six input variables used to compute the the priority score of
