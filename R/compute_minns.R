@@ -1,8 +1,7 @@
-#' Calculate rarity indices
-#'
-#' @details
 #' Compute I and Q indices in Minns (1987).
 #'
+#' @param pa `[matrix]`\cr a presence/absence matrix (site x species).
+#' 
 #' @references
 #' * Minns, C. K. 'A Method of Ranking Species and Sites for Conservation Using
 #' Presence-Absence Data and Its Application to Native Freshwater Fish in New
@@ -11,36 +10,6 @@
 #'
 #' @export
 
-compute_fish_priority_index <- function() {
-    fishPA6 <- path_input_data("Spp_dist_HYBAS6_20230125.csv") |>
-        readr::read_csv()
-
-    out <- data.frame(
-        fishPA6 |>
-            dplyr::select(HYBAS_ID),
-        compute_minns_Q_I(fishPA6 |>
-            dplyr::select(-HYBAS_ID) |>
-            as.matrix())
-    )
-    readr::write_csv(
-        out,
-        path_output_data("H6_importance_priority.csv")
-    )
-    out
-
-    # Ivals <- Ivals |>
-    #     dplyr::rowwise() |>
-    #     dplyr::mutate(
-    #         QijSij = sum(
-    #             dplyr::c_across(Acipenser_brevirostrum:Percina_shumardi)
-    #         ),
-    #         richness = sum(
-    #             dplyr::c_across(Acipenser_brevirostrum:Percina_shumardi) > 0
-    #         )
-    #     )
-}
-
-# See Minns 1987
 compute_minns_Q_I <- function(pa) {
     stopifnot(inherits(pa, "matrix"))
     # NB converting to 0/1 matrix

@@ -7,7 +7,7 @@
 apply_weights(ws_data)
 }
 \arguments{
-\item{ws_data}{A data frame with the variable of interest
+\item{ws_data}{\verb{[data.frame]}\cr A data frame with the variable of interest
 (see \code{\link[=generate_canada_dataset]{generate_canada_dataset()}} and \code{\link[=generate_lake_erie_dataset]{generate_lake_erie_dataset()}}).}
 }
 \value{

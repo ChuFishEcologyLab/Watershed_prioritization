@@ -5,3 +5,4 @@
 ^\.vscode$
 ^inst/extdata/ProtectedAreas$
 ^pres$
+^NOTES\.md$

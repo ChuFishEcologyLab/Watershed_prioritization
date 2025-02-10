@@ -591,9 +591,9 @@ dev.off() # Close the file
 ##Comparison analysis
 #######
 
-newdata = data %>% select(ends_with("scaled")) %>% st_drop_geometry()
-pca1 = prcomp(newdata, scale. = FALSE)
-head(pca1$rotation)
+newdata = data %>% select(dplyr::ends_with("scaled")) %>% st_drop_geometry()
+pca1 = stats::prcomp(newdata, scale. = FALSE)
+utils::head(pca1$rotation)
 scores = as_tibble(pca1$x)
 
 ggplot()+

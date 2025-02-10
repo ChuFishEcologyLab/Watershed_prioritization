@@ -1,6 +1,6 @@
 # Watershed_prioritization
 
-This folder includes the data, analyses, and Shiny app built to visualize the results of efforts to priortize watersheds within Canada for four freshwater fish conservation objectives including: 
+This folder includes the data, analyses, and Shiny app built to visualize the results of efforts to prioritize watersheds within Canada for four freshwater fish conservation objectives including: 
 - i) area-based protection; 
 - ii) habitat restoration; 
 - iii) species at risk management; or 

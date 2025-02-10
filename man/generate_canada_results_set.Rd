@@ -4,11 +4,19 @@
 \alias{generate_canada_results_set}
 \title{Generates the set of figures for Canada}
 \usage{
-generate_canada_results_set(can_data)
+generate_canada_results_set(map_can)
 }
 \arguments{
-\item{can_data}{Canada dataset see \code{\link[=generate_canada_dataset]{generate_canada_dataset()}}.}
+\item{map_can}{\verb{[sf]}\cr Results for Canada see \code{\link[=generate_canada_dataset]{generate_canada_dataset()}}.}
 }
 \description{
 Generates the set of figures for Canada
+}
+\examples{
+\dontrun{
+ generate_canada_dataset() |>
+     apply_weights() |>
+     spatialize_results() |>
+     generate_canada_results_set()
+}
 }

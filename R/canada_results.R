@@ -1,168 +1,39 @@
 #' Generates the set of figures for Canada
 #'
-#' @param can_data Canada dataset see [generate_canada_dataset()].
+#' @param map_can `[sf]`\cr Results for Canada see [generate_canada_dataset()].
 #' 
 #' @import ggplot2 patchwork
 #'
 #' @export
+#' 
+#' @examples
+#' \dontrun{
+#'  generate_canada_dataset() |>
+#'      apply_weights() |>
+#'      spatialize_results() |>
+#'      generate_canada_results_set()
+#' }
 
-generate_canada_results_set <- function(can_data) {
+generate_canada_results_set <- function(map_can) {
     suppressMessages({
-        weights <- path_input_data("Co_author_weightings.csv") |>
-            readr::read_csv(show_col_types = FALSE)
         feow <- path_input_data("FEOW_CAN_Extent/FEOW__CAN_Extent.shp") |>
             sf::read_sf()
         map5 <- path_input_data("map5.gpkg") |>
             sf::read_sf()
-        # Load map and join results
-        map6 <- path_input_data("map6.gpkg") |>
-            sf::read_sf() |>
-            dplyr::inner_join(can_data, by = dplyr::join_by(HYBAS_ID, FEOW_ID))
     })
-
-
-
-    ###########
-    # Hydrobasin 6 index values
-    ############
-    cli::cli_progress_step("now drawing fig 2", "fig 2 done", "fig 2 failed")
-    S2_A <- ggplot() +
-        geom_sf(data = map6, aes(fill = WSI_n, col = WSI_n), alpha = 1) +
-        viridis::scale_color_viridis(option = "viridis") +
-        viridis::scale_fill_viridis(
-            option = "viridis",
-            breaks = c(0, 25, 50, 75, 100)
-        ) +
-        theme_minimal() +
-        # ggtitle("Watershed stress")+
-        theme(
-            legend.title = element_blank(),
-            plot.title = element_text(hjust = 0.5),
-            axis.title = element_blank(),
-            axis.text = element_blank(),
-            panel.grid = element_blank(),
-            plot.margin = unit(c(-0.5, -1, -0.2, -1), "lines")
-        )
-
-    S2_B <- ggplot() +
-        geom_sf(data = map6, aes(fill = SARI_n, col = SARI_n), alpha = 1) +
-        viridis::scale_color_viridis(option = "viridis") +
-        viridis::scale_fill_viridis(
-            option = "viridis",
-            breaks = c(0, 25, 50, 75, 100)
-        ) +
-        theme_minimal() +
-        # ggtitle("Fish species at risk richness")+
-        theme(
-            legend.title = element_blank(),
-            plot.title = element_text(hjust = 0.5),
-            axis.title = element_blank(),
-            axis.text = element_blank(),
-            panel.grid = element_blank(),
-            plot.margin = unit(c(-0.5, -1, -0.2, -1), "lines")
-        )
-
-    S2_C <- ggplot() +
-        geom_sf(data = map6, aes(fill = Fish_richness_n, col = Fish_richness_n), alpha = 1) +
-        viridis::scale_color_viridis(option = "viridis") +
-        viridis::scale_fill_viridis(
-            option = "viridis",
-            breaks = c(0, 25, 50, 75, 100)
-        ) +
-        theme_minimal() +
-        # ggtitle("Fish species richness")+
-        theme(
-            legend.title = element_blank(),
-            plot.title = element_text(hjust = 0.5),
-            axis.title = element_blank(),
-            axis.text = element_blank(),
-            panel.grid = element_blank(),
-            plot.margin = unit(c(-0.5, -1, -0.2, -1), "lines")
-        )
-
-    S2_D <- ggplot() +
-        geom_sf(data = map6, aes(fill = Priority_n, col = Priority_n), alpha = 1) +
-        viridis::scale_color_viridis(option = "viridis") +
-        viridis::scale_fill_viridis(
-            option = "viridis",
-            breaks = c(0, 25, 50, 75, 100)
-        ) +
-        theme_minimal() +
-        # ggtitle("Fish rarity")+
-        theme(
-            legend.title = element_blank(),
-            plot.title = element_text(hjust = 0.5),
-            axis.title = element_blank(),
-            axis.text = element_blank(),
-            panel.grid = element_blank(),
-            plot.margin = unit(c(-0.5, -1, -0.2, -1), "lines")
-        )
-
-    S2_E <- ggplot() +
-        geom_sf(data = map6, aes(fill = FBCI_n, col = FBCI_n), alpha = 1) +
-        viridis::scale_color_viridis(option = "viridis") +
-        viridis::scale_fill_viridis(
-            option = "viridis",
-            breaks = c(0, 25, 50, 75, 100)
-        ) +
-        theme_minimal() +
-        # ggtitle("Fish biodiversity change")+
-        theme(
-            legend.title = element_blank(),
-            plot.title = element_text(hjust = 0.5),
-            axis.title = element_blank(),
-            axis.text = element_blank(),
-            panel.grid = element_blank(),
-            plot.margin = unit(c(-0.5, -1, -0.2, -1), "lines")
-        )
-
-    S2_F <- ggplot() +
-        geom_sf(data = map6, aes(fill = CCI_n, col = CCI_n), alpha = 1) +
-        viridis::scale_color_viridis(option = "viridis") +
-        viridis::scale_fill_viridis(
-            option = "viridis",
-            breaks = c(0, 25, 50, 75, 100)
-        ) +
-        theme_minimal() +
-        # ggtitle("Climate change")+
-        theme(
-            legend.title = element_blank(),
-            plot.title = element_text(hjust = 0.5),
-            axis.title = element_blank(),
-            axis.text = element_blank(),
-            panel.grid = element_blank(),
-            plot.margin = unit(c(-0.5, -1, -0.2, -1), "lines")
-        )
-
-
-    ggpubr::ggarrange(
-        S2_A, S2_B,
-        S2_C, S2_D,
-        S2_E, S2_F,
-        labels = c("Watershed stress", "Species at risk", "Species richness", "Species rarity", "Community change", "Climate change"),
-        font.label = list(size = 10, face = "plain", color = "black"),
-        hjust = -0.15, vjust = 1.8,
-        ncol = 2, nrow = 3, common.legend = TRUE,
-        legend = "bottom"
-    ) # Write the grid.arrange in the file
-    ggsave(path_output_fig("normalized_index_values.png"), width = 7.5, height = 9, units = "in", dpi = 300) # Open a new png file
-    cli::cli_progress_done()
-
 
 
     ## ------------------------------
     ## Priorities within ecoregions
     ## ------------------------------
     cli::cli_progress_step("now drawing fig 3", "fig 3 done", "fig 3 failed")
-    data <- map6
-
     #
     A1 <- ggplot() +
-        geom_sf(data = data, aes(fill = Prot_rank_feow_scaled, col = Prot_rank_feow_scaled), alpha = 1) +
+        geom_sf(data = map_can, aes(fill = Prot_rank_feow_scaled, col = Prot_rank_feow_scaled), alpha = 1) +
         viridis::scale_color_viridis(guide = "none", end = 0.9, direction = -1, option = "magma") +
         viridis::scale_fill_viridis(
             alpha = 1, end = 0.9, direction = -1, option = "magma",
-            breaks = c(1, median(data$Prot_rank_feow_scaled), max(data$Prot_rank_feow_scaled)),
+            breaks = c(1, stats::median(map_can$Prot_rank_feow_scaled), max(map_can$Prot_rank_feow_scaled)),
             labels = c("High", "Medium", "Low")
         ) +
         # geom_sf(data=feow, fill = "transparent", color ="black", linewidth =0.1)+
@@ -179,11 +50,11 @@ generate_canada_results_set <- function(can_data) {
 
     #
     B1 <- ggplot() +
-        geom_sf(data = data, aes(fill = Rest_rank_feow_scaled, col = Rest_rank_feow_scaled), alpha = 1) +
+        geom_sf(data = map_can, aes(fill = Rest_rank_feow_scaled, col = Rest_rank_feow_scaled), alpha = 1) +
         viridis::scale_color_viridis(guide = "none", end = 0.9, direction = -1, option = "magma") +
         viridis::scale_fill_viridis(
             alpha = 1, end = 0.9, direction = -1, option = "magma",
-            breaks = c(1, median(data$Rest_rank_feow_scaled), max(data$Rest_rank_feow_scaled)),
+            breaks = c(1, stats::median(map_can$Rest_rank_feow_scaled), max(map_can$Rest_rank_feow_scaled)),
             labels = c("High", "Medium", "Low")
         ) +
         # geom_sf(data=feow, fill = "transparent", color ="black", linewidth =0.1)+
@@ -200,11 +71,11 @@ generate_canada_results_set <- function(can_data) {
 
     #
     C1 <- ggplot() +
-        geom_sf(data = data, aes(fill = SAR_rank_feow_scaled, col = SAR_rank_feow_scaled), alpha = 1) +
+        geom_sf(data = map_can, aes(fill = SAR_rank_feow_scaled, col = SAR_rank_feow_scaled), alpha = 1) +
         viridis::scale_color_viridis(guide = "none", end = 0.9, direction = -1, option = "magma") +
         viridis::scale_fill_viridis(
             alpha = 1, end = 0.9, direction = -1, option = "magma",
-            breaks = c(1, median(data$SAR_rank_feow_scaled), max(data$SAR_rank_feow_scaled)),
+            breaks = c(1, stats::median(map_can$SAR_rank_feow_scaled), max(map_can$SAR_rank_feow_scaled)),
             labels = c("High", "Medium", "Low")
         ) +
         # geom_sf(data=feow, fill = "transparent", color ="black", linewidth =0.1)+
@@ -221,11 +92,11 @@ generate_canada_results_set <- function(can_data) {
 
     #
     D1 <- ggplot() +
-        geom_sf(data = data, aes(fill = AIS_rank_feow_scaled, col = AIS_rank_feow_scaled), alpha = 1) +
+        geom_sf(data = map_can, aes(fill = AIS_rank_feow_scaled, col = AIS_rank_feow_scaled), alpha = 1) +
         viridis::scale_color_viridis(guide = "none", end = 0.9, direction = -1, option = "magma") +
         viridis::scale_fill_viridis(
             alpha = 1, end = 0.9, direction = -1, option = "magma",
-            breaks = c(1, median(data$AIS_rank_feow_scaled), max(data$AIS_rank_feow_scaled)),
+            breaks = c(1, stats::median(map_can$AIS_rank_feow_scaled), max(map_can$AIS_rank_feow_scaled)),
             labels = c("High", "Medium", "Low")
         ) +
         # geom_sf(data=feow, fill = "transparent", color ="black", linewidth =0.1)+
@@ -251,41 +122,21 @@ generate_canada_results_set <- function(can_data) {
     cli::cli_progress_done()
 
 
-    ## -----------------------------------
-    ## Analysis of priorities within FEOW
-    ## -----------------------------------
-
-    # map6 |>
-    #     st_drop_geometry() |>
-    #     ungroup() |>
-    #     dplyr::group_by(FEOW_ID) |>
-    #     summarise(SAR_p = max(SARI_n)) |>
-    #     print(n = Inf)
-    # # two ecoregions with no SAR (111, 112)
-
-    # map6 |>
-    #     st_drop_geometry() |>
-    #     ungroup() |>
-    #     dplyr::group_by(FEOW_ID) |>
-    #     summarise(SAR_p = max(FBCI_n)) |>
-    #     print(n = Inf)
-
-
 
 
     ###################
     # Hydrobasin 6 national priorities
     #################
     cli::cli_progress_step("now drawing fig 4", "fig 4 done", "fig 4 failed")
-    data <- map6
+    data <- map_can
     #
-    data$rank <- rank(-data$protection_score)
+    map_can$rank <- rank(-map_can$protection_score)
     A <- ggplot() +
-        geom_sf(data = data, aes(fill = rank, col = rank), alpha = 1) +
+        geom_sf(data = map_can, aes(fill = rank, col = rank), alpha = 1) +
         viridis::scale_color_viridis(guide = "none", end = 0.9, direction = -1, option = "magma") +
         viridis::scale_fill_viridis(
             alpha = 1, end = 0.9, direction = -1, option = "magma",
-            breaks = c(1, median(data$rank), max(data$rank)),
+            breaks = c(1, stats::median(map_can$rank), max(map_can$rank)),
             labels = c("High", "Medium", "Low")
         ) +
         theme_minimal() +
@@ -299,13 +150,13 @@ generate_canada_results_set <- function(can_data) {
             plot.margin = unit(c(-0.5, -1, -0.2, -1), "lines")
         )
     #
-    data$rank <- rank(-data$restoration_score)
+    map_can$rank <- rank(-map_can$restoration_score)
     B <- ggplot() +
-        geom_sf(data = data, aes(fill = rank, col = rank), alpha = 1) +
+        geom_sf(data = map_can, aes(fill = rank, col = rank), alpha = 1) +
         viridis::scale_color_viridis(guide = "none", end = 0.9, direction = -1, option = "magma") +
         viridis::scale_fill_viridis(
             alpha = 1, end = 0.9, direction = -1, option = "magma",
-            breaks = c(1, median(data$rank), max(data$rank)),
+            breaks = c(1, stats::median(map_can$rank), max(map_can$rank)),
             labels = c("High", "Medium", "Low")
         ) +
         theme_minimal() +
@@ -319,13 +170,13 @@ generate_canada_results_set <- function(can_data) {
             plot.margin = unit(c(-0.5, -1, -0.2, -1), "lines")
         )
     #
-    data$rank <- rank(-data$SAR_score)
+    map_can$rank <- rank(-map_can$SAR_score)
     C <- ggplot() +
-        geom_sf(data = data, aes(fill = rank, col = rank), alpha = 1) +
+        geom_sf(data = map_can, aes(fill = rank, col = rank), alpha = 1) +
         viridis::scale_color_viridis(guide = "none", end = 0.9, direction = -1, option = "magma") +
         viridis::scale_fill_viridis(
             alpha = 1, end = 0.9, direction = -1, option = "magma",
-            breaks = c(1, median(data$rank), max(data$rank)),
+            breaks = c(1, stats::median(map_can$rank), max(map_can$rank)),
             labels = c("High", "Medium", "Low")
         ) +
         theme_minimal() +
@@ -339,13 +190,13 @@ generate_canada_results_set <- function(can_data) {
             plot.margin = unit(c(-0.5, -1, -0.2, -1), "lines")
         )
     #
-    data$rank <- rank(-data$AIS_score)
+    map_can$rank <- rank(-map_can$AIS_score)
     D <- ggplot() +
-        geom_sf(data = data, aes(fill = rank, col = rank), alpha = 1) +
+        geom_sf(data = map_can, aes(fill = rank, col = rank), alpha = 1) +
         viridis::scale_color_viridis(guide = "none", end = 0.9, direction = -1, option = "magma") +
         viridis::scale_fill_viridis(
             alpha = 1, end = 0.9, direction = -1, option = "magma",
-            breaks = c(1, median(data$rank), max(data$rank)),
+            breaks = c(1, stats::median(map_can$rank), max(map_can$rank)),
             labels = c("High", "Medium", "Low")
         ) +
         theme_minimal() +
@@ -385,9 +236,9 @@ generate_canada_results_set <- function(can_data) {
     )
 
     #
-    data <- map6
-    perc1 <- stats::quantile(data$Prot_rank_feow_scaled)
-    perc2 <- stats::quantile(data$Rest_rank_feow_scaled)
+    data <- map_can
+    perc1 <- stats::quantile(map_can$Prot_rank_feow_scaled)
+    perc2 <- stats::quantile(map_can$Rest_rank_feow_scaled)
 
     rects <- dplyr::tibble(
         xmins = c(1, 1, perc1[2], perc1[2]),
@@ -399,7 +250,7 @@ generate_canada_results_set <- function(can_data) {
 
     p1 <- ggplot() +
         geom_rect(data = rects, aes(xmin = xmins, ymin = ymins, xmax = xmaxs, ymax = ymaxs, fill = fills)) +
-        geom_point(data = data, aes(
+        geom_point(data = map_can, aes(
             x = Prot_rank_feow_scaled,
             y = Rest_rank_feow_scaled
         )) +
@@ -421,9 +272,9 @@ generate_canada_results_set <- function(can_data) {
         )
     p1
 
-    cor(data$Prot_rank_feow_scaled, data$Rest_rank_feow_scaled, method = "spearman")
+    cor(map_can$Prot_rank_feow_scaled, map_can$Rest_rank_feow_scaled, method = "spearman")
 
-    data <- data |>
+    map_can <- map_can |>
         dplyr::mutate(wsh_fill = ifelse(
             Prot_rank_feow_scaled < perc1[2] & Rest_rank_feow_scaled < perc2[2], "a",
             ifelse(Prot_rank_feow_scaled < perc1[2], "b",
@@ -431,10 +282,10 @@ generate_canada_results_set <- function(can_data) {
             )
         ))
 
-    length(which(data$wsh_fill == "a")) / length(which(data$wsh_fill %in% c("a", "b", "c")))
+    length(which(map_can$wsh_fill == "a")) / length(which(map_can$wsh_fill %in% c("a", "b", "c")))
 
     m1 <- ggplot() +
-        geom_sf(data = data, aes(fill = wsh_fill, col = wsh_fill), alpha = 1) +
+        geom_sf(data = map_can, aes(fill = wsh_fill, col = wsh_fill), alpha = 1) +
         scale_color_manual(
             guide = "none",
             values = pal
@@ -462,8 +313,8 @@ generate_canada_results_set <- function(can_data) {
 
     ##
     cli::cli_progress_step("now drawing fig 6", "fig 6 done", "fig 6 failed")
-    perc1 <- stats::quantile(data$SAR_rank_feow_scaled)
-    perc2 <- stats::quantile(data$AIS_rank_feow_scaled)
+    perc1 <- stats::quantile(map_can$SAR_rank_feow_scaled)
+    perc2 <- stats::quantile(map_can$AIS_rank_feow_scaled)
 
     rects <- dplyr::tibble(
         xmins = c(1, 1, perc1[2], perc1[2]),
@@ -473,11 +324,11 @@ generate_canada_results_set <- function(can_data) {
         fills = c("a", "b", "c", "d")
     )
 
-    stats::cor(data$SAR_rank_feow_scaled, data$AIS_rank_feow_scaled, method = "spearman")
+    stats::cor(map_can$SAR_rank_feow_scaled, map_can$AIS_rank_feow_scaled, method = "spearman")
 
     p2 <- ggplot() +
         geom_rect(data = rects, aes(xmin = xmins, ymin = ymins, xmax = xmaxs, ymax = ymaxs, fill = fills)) +
-        geom_point(data = data, aes(
+        geom_point(data = map_can, aes(
             x = SAR_rank_feow_scaled,
             y = AIS_rank_feow_scaled
         )) +
@@ -499,7 +350,7 @@ generate_canada_results_set <- function(can_data) {
         )
     p2
 
-    data <- data |>
+    map_can <- map_can |>
         dplyr::mutate(wsh_fill = ifelse(
             SAR_rank_feow_scaled < perc1[2] & AIS_rank_feow_scaled < perc2[2], "a",
             ifelse(SAR_rank_feow_scaled < perc1[2], "b",
@@ -507,11 +358,11 @@ generate_canada_results_set <- function(can_data) {
             )
         ))
 
-    length(which(data$wsh_fill == "a")) / length(which(data$wsh_fill %in% c("a", "b", "c")))
+    length(which(map_can$wsh_fill == "a")) / length(which(map_can$wsh_fill %in% c("a", "b", "c")))
 
 
     m2 <- ggplot() +
-        geom_sf(data = data, aes(fill = wsh_fill, col = wsh_fill), alpha = 1) +
+        geom_sf(data = map_can, aes(fill = wsh_fill, col = wsh_fill), alpha = 1) +
         scale_color_manual(
             guide = "none",
             values = pal
@@ -541,10 +392,10 @@ generate_canada_results_set <- function(can_data) {
     ## --------------------------
 
     newdata <- data |>
-        dplyr::select(ends_with("scaled")) |>
+        dplyr::select(dplyr::ends_with("scaled")) |>
         sf::st_drop_geometry()
-    pca1 <- prcomp(newdata, scale. = FALSE)
-    head(pca1$rotation)
+    pca1 <- stats::prcomp(newdata, scale. = FALSE)
+    utils::head(pca1$rotation)
     scores <- dplyr::as_tibble(pca1$x)
 
     p_comp <- ggplot() +
@@ -562,13 +413,13 @@ generate_canada_results_set <- function(can_data) {
         sf::st_drop_geometry() |>
         dplyr::ungroup()
 
-    map6 <- map6 |>
+    map_can <- map_can |>
         dplyr::ungroup() |>
         dplyr::mutate(
-            protection_score5 = d5$protection_score[match(map6$corresponding.HYBAS5, d5$HYBAS_ID)],
-            restoration_score5 = d5$restoration_score[match(map6$corresponding.HYBAS5, d5$HYBAS_ID)],
-            SAR_score5 = d5$SAR_score[match(map6$corresponding.HYBAS5, d5$HYBAS_ID)],
-            AIS_score5 = d5$AIS_score[match(map6$corresponding.HYBAS5, d5$HYBAS_ID)],
+            protection_score5 = d5$protection_score[match(map_can$corresponding.HYBAS5, d5$HYBAS_ID)],
+            restoration_score5 = d5$restoration_score[match(map_can$corresponding.HYBAS5, d5$HYBAS_ID)],
+            SAR_score5 = d5$SAR_score[match(map_can$corresponding.HYBAS5, d5$HYBAS_ID)],
+            AIS_score5 = d5$AIS_score[match(map_can$corresponding.HYBAS5, d5$HYBAS_ID)],
         )
 
     obj <- c("protection", "restoration", "SAR", "AIS")
@@ -579,24 +430,24 @@ generate_canada_results_set <- function(can_data) {
         for (i in seq_len(length(obj))) {
             for (j in 1:length(threshold)) {
                 var <- paste0(obj[i], "_score")
-                tmp <- map6 |>
+                tmp <- map_can |>
                     dplyr::ungroup() |>
                     dplyr::group_by(FEOW_ID) |>
                     dplyr::arrange(FEOW_ID, desc(!!var)) |>
                     dplyr::relocate(!!var, .after = last_col()) |>
                     dplyr::top_frac(n = threshold[j])
-                map6$level6 <- ifelse(map6$HYBAS_ID %in% tmp$HYBAS_ID, 1, 0)
+                map_can$level6 <- ifelse(map_can$HYBAS_ID %in% tmp$HYBAS_ID, 1, 0)
 
                 var2 <- paste0(obj[i], "_score5")
-                tmp <- map6 |>
+                tmp <- map_can |>
                     dplyr::ungroup() |>
                     dplyr::group_by(FEOW_ID) |>
                     dplyr::arrange(FEOW_ID, desc(!!var2)) |>
                     dplyr::relocate(!!var2, .after = last_col()) |>
                     dplyr::top_frac(n = threshold[j])
-                map6$level5 <- ifelse(map6$HYBAS_ID %in% tmp$HYBAS_ID, 1, 0)
+                map_can$level5 <- ifelse(map_can$HYBAS_ID %in% tmp$HYBAS_ID, 1, 0)
 
-                ratio <- length(which(map6$level6 == 1 & map6$level5 == 0)) / length(which(map6$level6 == 1))
+                ratio <- length(which(map_can$level6 == 1 & map_can$level5 == 0)) / length(which(map_can$level6 == 1))
 
                 to_add <- dplyr::tibble(objective = obj[i], threshold = threshold[j], ratio = ratio)
                 df <- dplyr::bind_rows(df, to_add)

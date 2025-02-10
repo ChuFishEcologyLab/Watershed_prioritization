@@ -11,16 +11,21 @@ run_pipeline <- function() {
     # ======================== CANADA
     #------------------------
     cli::cli_progress_step("-> Generate watershed prioritization dataset for Canada")
-    can_data <- generate_canada_dataset() |>
-        apply_weights()
+    map_data <- generate_canada_dataset() |>
+        apply_weights()  |>
+        spatialize_results()
     cli::cli_progress_done()
     #------------------------
     cli::cli_progress_step("-> Plot co-author weightings")
     plot_weightings()
     cli::cli_progress_done()
     #------------------------
+    cli::cli_progress_step("-> Plot input variables")
+    plot_input_variables(map_data)
+    cli::cli_progress_done()
+    #------------------------
     cli::cli_progress_step("-> Results")
-    generate_canada_results_set(can_data)
+    generate_canada_results_set(map_data)
     cli::cli_progress_done()
     #-----------------------
 

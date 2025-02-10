@@ -1,7 +1,10 @@
 #' Co-author weighting plot
 #'
-#' Plot values for weighting each of six watershed indices towards four 
+#' Plot values for weighting each of six watershed indices towards four
 #' conservation objectives.
+#' 
+#' @param filename `[character string]`\cr Name of the output file (passed to 
+#' [ggplot2::ggsave()]).
 #'
 #' @details
 #' Black dots show the suggested weights from each of 8 co-authors for the
@@ -12,14 +15,20 @@
 #' negative values indicate that watersheds with low values of the index should
 #' be selected as priorities.
 #'
+#' @return
+#' The function plot the `TRUE` invisibly.
+#'
 #' @export
 #'
+#' @examples
+#' \dontrun{
+#' plot_weightings()
+#' }
 
-plot_weightings <- function() {
+plot_weightings <- function(filename = "coauthor_weightings.png") {
     weights <- path_input_data("Co_author_weightings.csv") |>
         readr::read_csv(show_col_types = FALSE)
 
-    progress_step_fig("Co-authors Weightings")
     pdata1 <- weights[, c(1:6)]
     pdata1 <- tidyr::pivot_longer(pdata1, cols = starts_with("Weight for"))
     pdata1$name <- rep(c(
@@ -130,9 +139,9 @@ plot_weightings <- function() {
 
     (p1 + p2) / (p3 + p4)
     ggsave(
-        path_output_fig("coauthor_weightings.png"), 
+        path_output_fig(filename),
         width = 10, height = 7.5, units = "in", dpi = 300
     )
 
-    cli::cli_progress_done()
+    invisible(TRUE)
 }

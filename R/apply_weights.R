@@ -1,6 +1,6 @@
 #' Applying expert weight to watershed prioritization data
 #'
-#' @param ws_data A data frame with the variable of interest
+#' @param ws_data `[data.frame]`\cr A data frame with the variable of interest
 #' (see [generate_canada_dataset()] and [generate_lake_erie_dataset()]).
 #'
 #' @details
@@ -32,7 +32,6 @@ apply_weights <- function(ws_data) {
       values_to = "Weight"
     )
 
-  # require to execute generate_priorization_data()
   ws_data_w <- ws_data |>
     #---------------- Priorities for Protected areas
     dplyr::mutate(
