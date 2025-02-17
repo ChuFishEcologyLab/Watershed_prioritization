@@ -28,6 +28,7 @@ Imports:
     vegan (>= 2.6-10),
 	viridis (>= 0.6.5)
 Suggests:
+    bslib (>= 0.9.0),
     htmltools (>= 0.5.8.1),
     leaflet (>= 2.2.2),
     leafem (>= 0.2.3),
@@ -35,7 +36,7 @@ Suggests:
     shiny (>= 1.9.1),
     shinyWidgets (>= 0.8.7),
     shinybusy (>= 0.3.3),
-    shinythemes (>= 1.2.0),
+    shinyjs (>= 2.1.0),
     terra (>= 1.8-15),
     testthat (>= 3.0.0)
 RoxygenNote: 7.3.2
