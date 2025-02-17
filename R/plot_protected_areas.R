@@ -29,4 +29,6 @@ plot_protected_areas <- function(map, filename = "protected_areas.png") {
         width = 6, height = 5, units = "in",
         dpi = 300
     )
+
+    invisible(TRUE)
 }

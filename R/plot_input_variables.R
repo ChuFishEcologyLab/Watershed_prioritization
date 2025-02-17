@@ -3,11 +3,11 @@
 #' Plot the six input variables used to compute the the priority score of
 #' watersheds.
 #'
-#' @param map `[sf]`\cr  Map that include the geometries of the watersheds 
+#' @param map `[sf]`\cr  Map that includes the geometries of the watersheds 
 #' along with the prioritization input variables (normalized).
 #' @param filename `[character string]`\cr Name of the output file (passed to
 #' [ggplot2::ggsave()]).
-#'
+#' 
 #' @return
 #' The function plots the figure and returns `TRUE` invisibly.
 #'

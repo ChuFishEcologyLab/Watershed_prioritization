@@ -7,7 +7,7 @@
 plot_input_variables(map, filename = "normalized_index_values.png")
 }
 \arguments{
-\item{map}{\verb{[sf]}\cr  Map that include the geometries of the watersheds
+\item{map}{\verb{[sf]}\cr  Map that includes the geometries of the watersheds
 along with the prioritization input variables (normalized).}
 
 \item{filename}{\verb{[character string]}\cr Name of the output file (passed to
