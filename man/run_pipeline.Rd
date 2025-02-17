@@ -4,7 +4,10 @@
 \alias{run_pipeline}
 \title{Pipeline}
 \usage{
-run_pipeline()
+run_pipeline(write = TRUE)
+}
+\arguments{
+\item{write}{a logical, should results be written (2 geopackages)?}
 }
 \description{
 This function runs all the steps the reproduce the analysis.
