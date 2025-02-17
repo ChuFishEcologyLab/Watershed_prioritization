@@ -13,28 +13,27 @@ The prioritizations were based on national spatial data of the richness, rarity,
 
 ### R package 
 
-- `R/` code source
-- `man/` code source
+
+
+- `R/` include the source code
+- `man/` cod
+- `DESCRIPTION` list basic info of the package (version, dependencies, ...)
+- `test` includes unit test
+- `inst` includes files installed with package (see below)
 
 ### Special
 
-- `inst/Analysis`: older version of analysis 
-- `inst/extdata`: data 
-
-
-## Data 
-
-### Inputs 
-
-
-### Outputs
-
-Data are stored in `output_data/`, the folder is created if missing.
+- content of `inst`:
+    - `inst/Analysis`: files that include the previous version of the analysis 
+    - `inst/extdata`: raw data and shapefiles 
+    - `inst/Manuscript`: manuscript 
+- `figs` includes figures (see `v2/` for the current version of the figures)
+- `ShinyApps` includes a Shiny App to explore the results
 
 
 ## Analysis 
 
-Install the package 
+To reproduce the analysis, first install the package: 
 
 ```R
 install.packages("remotes")
@@ -46,4 +45,37 @@ Once installed run:
 ```R
 library(watershedPrioritization)
 run_pipeline()
+```
+
+See `R/pipeline.R` and the documentation of the package for more details.
+
+
+## Shiny App 
+
+To run the Shiny App, first download this repository, then set your working to 
+`ShinyApp`, then run:
+
+```r
+shiny::runApp()
+```
+
+Note that the following package are required:
+
+- bslib (>= 0.9.0),
+- leaflet (>= 2.2.2),
+- leafem (>= 0.2.3),
+- shiny (>= 1.9.1),
+- shinybusy (>= 0.3.3),
+- shinyjs (>= 2.1.0),
+- sf (>= 1.0-18)
+
+
+## Basic session Info
+
+Code (package and Shiny App) was tested under: 
+
+```r
+R version 4.4.2 (2024-10-31)
+Platform: x86_64-pc-linux-gnu
+Running under: Ubuntu 24.04.2 LTS
 ```

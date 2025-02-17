@@ -14,13 +14,6 @@ path_output_fig <- function(filename) {
     fs::path("figs/v2", filename)
 }
 
-progress_step_fig <- function(id) {
-    cli::cli_progress_step(
-        cli::pluralize("now drawing fig {id}"),
-        cli::pluralize("fig {id} done"),
-        cli::pluralize("fig {id} failed")
-    )
-}
 
 # scaling helper
 scale_rank <- function(x, mx) {
@@ -47,5 +40,6 @@ utils::globalVariables(c(
     "SARI_n", "SAR_rank_feow", "SAR_rank_feow_scaled", "SAR_score", "Stress", 
     "WSI", "WSI_n", "cor", "fills", "last_col", "med", "name", "objective", 
     "perc_overlap", "protection_score", "restoration_score", "starts_with", 
-    "value", "wsh_fill", "xmaxs", "xmins", "ymaxs", "ymins"
+    "value", "wsh_fill", "xmaxs", "xmins", "ymaxs", "ymins", 
+    "AIS_rank_scaled", "Prot_rank_scaled", "Rest_rank_scaled", "SAR_rank_scaled"
 ))

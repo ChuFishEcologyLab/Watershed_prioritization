@@ -31,7 +31,7 @@ The dataset includes seven normalized variables used to prioritize watershed
 conservation.
 }
 \details{
-Note that raw data are embeded in the R package in \code{extdata} folder.
+Note that raw data are embedded in the R package in \code{extdata} folder.
 The scaling (variables are normalized) enables comparison between regions,
 considering that regions have varying numbers of watersheds and,
 consequently, different value ranges for ranking.

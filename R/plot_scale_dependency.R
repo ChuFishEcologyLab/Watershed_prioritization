@@ -40,7 +40,7 @@ plot_scale_dependency <- function(map, map5, filename = "scale_dependency.png") 
                 tmp <- map |>
                     dplyr::ungroup() |>
                     dplyr::group_by(FEOW_ID) |>
-                    dplyr::arrange(FEOW_ID, desc(!!var)) |>
+                    dplyr::arrange(FEOW_ID, dplyr::desc(!!var)) |>
                     dplyr::relocate(!!var, .after = last_col()) |>
                     dplyr::top_frac(n = threshold[j])
                 map$level6 <- ifelse(map$HYBAS_ID %in% tmp$HYBAS_ID, 1, 0)
@@ -49,7 +49,7 @@ plot_scale_dependency <- function(map, map5, filename = "scale_dependency.png") 
                 tmp <- map |>
                     dplyr::ungroup() |>
                     dplyr::group_by(FEOW_ID) |>
-                    dplyr::arrange(FEOW_ID, desc(!!var2)) |>
+                    dplyr::arrange(FEOW_ID, dplyr::desc(!!var2)) |>
                     dplyr::relocate(!!var2, .after = last_col()) |>
                     dplyr::top_frac(n = threshold[j])
                 map$level5 <- ifelse(map$HYBAS_ID %in% tmp$HYBAS_ID, 1, 0)

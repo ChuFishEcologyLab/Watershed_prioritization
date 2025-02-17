@@ -37,7 +37,7 @@ plot_weightings <- function(filename = "coauthor_weightings.png") {
     ), 8)
     sumpdata1 <- pdata1 |>
         dplyr::group_by(name) |>
-        dplyr::summarize(med = median(value))
+        dplyr::summarize(med = stats::median(value))
 
     p1 <- ggplot() +
         geom_hline(aes(yintercept = 0), color = "black", linetype = 2) +
@@ -64,7 +64,7 @@ plot_weightings <- function(filename = "coauthor_weightings.png") {
     ), 8)
     sumpdata2 <- pdata2 |>
         dplyr::group_by(name) |>
-        dplyr::summarize(med = median(value))
+        dplyr::summarize(med = stats::median(value))
 
     p2 <- ggplot() +
         geom_hline(aes(yintercept = 0), color = "black", linetype = 2) +
@@ -91,7 +91,7 @@ plot_weightings <- function(filename = "coauthor_weightings.png") {
     ), 8)
     sumpdata3 <- pdata3 |>
         dplyr::group_by(name) |>
-        dplyr::summarize(med = median(value))
+        dplyr::summarize(med = stats::median(value))
 
     p3 <- ggplot() +
         geom_hline(aes(yintercept = 0), color = "black", linetype = 2) +
@@ -118,7 +118,7 @@ plot_weightings <- function(filename = "coauthor_weightings.png") {
     ), 8)
     sumpdata4 <- pdata4 |>
         dplyr::group_by(name) |>
-        dplyr::summarize(med = median(value))
+        dplyr::summarize(med = stats::median(value))
 
     p4 <- ggplot() +
         geom_hline(aes(yintercept = 0), color = "black", linetype = 2) +

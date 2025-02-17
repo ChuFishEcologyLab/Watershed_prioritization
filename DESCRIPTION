@@ -34,7 +34,6 @@ Suggests:
     leafem (>= 0.2.3),
     rsconnect (>= 1.3.2),
     shiny (>= 1.9.1),
-    shinyWidgets (>= 0.8.7),
     shinybusy (>= 0.3.3),
     shinyjs (>= 2.1.0),
     terra (>= 1.8-15),
