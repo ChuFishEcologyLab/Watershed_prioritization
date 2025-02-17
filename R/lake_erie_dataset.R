@@ -14,7 +14,6 @@
 #' @return
 #' A data frame with the following columns:
 #' * HYBAS_ID: Hydrobassin identifier ,
-#' * FEOW_ID: Freshwater Ecoregions of the World identifier,
 #' * WSI_n: Watershed stress index from Hirsh-Pearson (2022),
 #' * FBCI_n: Fish biodiversity change index. Calculate Jaccard dissimilarity
 #' for native spp pool vs. current native + non-native spp pool.

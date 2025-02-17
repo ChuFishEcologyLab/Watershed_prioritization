@@ -2,7 +2,8 @@
 % Please edit documentation in R/plot_comparison.R
 \name{plot_comparison}
 \alias{plot_comparison}
-\title{Plot percentage of protected area per watershed}
+\alias{plot_comparison_pca}
+\title{Compare Spatial overlap of high priority watersheds for 2 variables}
 \usage{
 plot_comparison(
   map,
@@ -13,12 +14,14 @@ plot_comparison(
   ylab = "Priority for habitat restoration",
   filename = "protection_vs_restoration.png"
 )
+
+plot_comparison_pca(map)
 }
 \arguments{
 \item{map}{\verb{[sf]}\cr  Map that include the geometries of the watersheds
 along with the prioritization input variables (normalized).}
 
-\item{feow}{\verb{[sf]}\cr  Geometries of the Freshwater Ecoregions of the World (FEOW).}
+\item{feow}{\verb{[sf]}\cr Geometries of the Freshwater Ecoregions of the World (FEOW).}
 
 \item{var1, var2}{\verb{[var]}\cr Variables to be compared.}
 
@@ -31,8 +34,21 @@ along with the prioritization input variables (normalized).}
 The function plots the figure and returns \code{TRUE} invisibly.
 }
 \description{
-Plot percentage of protected area per watershed
+Compare Spatial overlap of high priority watersheds for 2 variables
 }
+\details{
+Used for:
+\itemize{
+\item Spatial overlap of high priority watersheds for habitat restoration and
+area-based protection;
+\item Species at risk management and invasive species management.
+}
+}
+\section{Functions}{
+\itemize{
+\item \code{plot_comparison_pca()}: PCA to vizualize correlations among scaled variales.
+
+}}
 \examples{
 \dontrun{
 feow <- path_input_data("FEOW_CAN_Extent/FEOW__CAN_Extent.shp") |>

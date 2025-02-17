@@ -10,7 +10,6 @@ generate_lake_erie_dataset()
 A data frame with the following columns:
 \itemize{
 \item HYBAS_ID: Hydrobassin identifier ,
-\item FEOW_ID: Freshwater Ecoregions of the World identifier,
 \item WSI_n: Watershed stress index from Hirsh-Pearson (2022),
 \item FBCI_n: Fish biodiversity change index. Calculate Jaccard dissimilarity
 for native spp pool vs. current native + non-native spp pool.

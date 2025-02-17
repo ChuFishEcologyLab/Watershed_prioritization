@@ -1,61 +1,32 @@
 #' Generates the set of figures for Canada
 #'
-#' @param map_can `[sf]`\cr Results for Canada see [generate_canada_dataset()].
-#' 
-#' @import ggplot2 patchwork
+#' @param map `[sf]`\cr Results for Canada see [generate_canada_dataset()].
+#' @param map5 `[sf]`\cr Results for Canada at level 5.
+#' @param filename `[character string]`\cr Name of the output file (passed to
+#' [ggplot2::ggsave()]).
 #'
 #' @export
-#' 
+#'
 #' @examples
 #' \dontrun{
-#'  generate_canada_dataset() |>
-#'      apply_weights() |>
-#'      spatialize_results() |>
-#'      generate_canada_results_set()
+#' generate_canada_dataset() |>
+#'     apply_weights() |>
+#'     spatialize_results() |>
+#'     plot_scale_dependency(map5)
 #' }
 
-generate_canada_results_set <- function(map_can) {
-    suppressMessages({
-        feow <- path_input_data("FEOW_CAN_Extent/FEOW__CAN_Extent.shp") |>
-            sf::read_sf()
-        map5 <- path_input_data("map5.gpkg") |>
-            sf::read_sf()
-    })
-
-
-    ## -------------------------
-    ## Comparison analysis
-    ## --------------------------
-
-    newdata <- data |>
-        dplyr::select(dplyr::ends_with("scaled")) |>
-        sf::st_drop_geometry()
-    pca1 <- stats::prcomp(newdata, scale. = FALSE)
-    utils::head(pca1$rotation)
-    scores <- dplyr::as_tibble(pca1$x)
-
-    p_comp <- ggplot() +
-        geom_point(data = scores, aes(x = PC1, y = PC2))
-
-
-
-    ## -------------------------
-    ## Investigating scale
-    ## --------------------------
-
-    cli::cli_progress_step("now drawing fig 7", "fig 7 done", "fig 7 failed")
-
+plot_scale_dependency <- function(map, map5, filename = "scale_dependency.png") {
     d5 <- map5 |>
         sf::st_drop_geometry() |>
         dplyr::ungroup()
 
-    map_can <- map_can |>
+    map <- map |>
         dplyr::ungroup() |>
         dplyr::mutate(
-            protection_score5 = d5$protection_score[match(map_can$corresponding.HYBAS5, d5$HYBAS_ID)],
-            restoration_score5 = d5$restoration_score[match(map_can$corresponding.HYBAS5, d5$HYBAS_ID)],
-            SAR_score5 = d5$SAR_score[match(map_can$corresponding.HYBAS5, d5$HYBAS_ID)],
-            AIS_score5 = d5$AIS_score[match(map_can$corresponding.HYBAS5, d5$HYBAS_ID)],
+            protection_score5 = d5$protection_score[match(map$corresponding.HYBAS5, d5$HYBAS_ID)],
+            restoration_score5 = d5$restoration_score[match(map$corresponding.HYBAS5, d5$HYBAS_ID)],
+            SAR_score5 = d5$SAR_score[match(map$corresponding.HYBAS5, d5$HYBAS_ID)],
+            AIS_score5 = d5$AIS_score[match(map$corresponding.HYBAS5, d5$HYBAS_ID)],
         )
 
     obj <- c("protection", "restoration", "SAR", "AIS")
@@ -64,26 +35,26 @@ generate_canada_results_set <- function(map_can) {
 
     suppressMessages({
         for (i in seq_len(length(obj))) {
-            for (j in 1:length(threshold)) {
+            for (j in seq_len(length(threshold))) {
                 var <- paste0(obj[i], "_score")
-                tmp <- map_can |>
+                tmp <- map |>
                     dplyr::ungroup() |>
                     dplyr::group_by(FEOW_ID) |>
                     dplyr::arrange(FEOW_ID, desc(!!var)) |>
                     dplyr::relocate(!!var, .after = last_col()) |>
                     dplyr::top_frac(n = threshold[j])
-                map_can$level6 <- ifelse(map_can$HYBAS_ID %in% tmp$HYBAS_ID, 1, 0)
+                map$level6 <- ifelse(map$HYBAS_ID %in% tmp$HYBAS_ID, 1, 0)
 
                 var2 <- paste0(obj[i], "_score5")
-                tmp <- map_can |>
+                tmp <- map |>
                     dplyr::ungroup() |>
                     dplyr::group_by(FEOW_ID) |>
                     dplyr::arrange(FEOW_ID, desc(!!var2)) |>
                     dplyr::relocate(!!var2, .after = last_col()) |>
                     dplyr::top_frac(n = threshold[j])
-                map_can$level5 <- ifelse(map_can$HYBAS_ID %in% tmp$HYBAS_ID, 1, 0)
+                map$level5 <- ifelse(map$HYBAS_ID %in% tmp$HYBAS_ID, 1, 0)
 
-                ratio <- length(which(map_can$level6 == 1 & map_can$level5 == 0)) / length(which(map_can$level6 == 1))
+                ratio <- length(which(map$level6 == 1 & map$level5 == 0)) / length(which(map$level6 == 1))
 
                 to_add <- dplyr::tibble(objective = obj[i], threshold = threshold[j], ratio = ratio)
                 df <- dplyr::bind_rows(df, to_add)
@@ -121,10 +92,11 @@ generate_canada_results_set <- function(map_can) {
         ) +
         scale_color_viridis_d(option = "viridis")
 
-    ggpubr::ggarrange(s1, ncol = 1, nrow = 1) # Write the grid.arrange in the file
-    ggsave(path_output_fig("scale_dependency.png"), width = 5, height = 4, units = "in", dpi = 300) # Open a new png file
-    cli::cli_process_done()
-
+    s1
+    ggsave(
+        path_output_fig(filename),
+        width = 5, height = 4, units = "in", dpi = 300
+    )
 
     invisible(TRUE)
 }

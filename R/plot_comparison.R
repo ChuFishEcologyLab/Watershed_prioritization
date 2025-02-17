@@ -1,12 +1,18 @@
-#' Plot percentage of protected area per watershed
+#'  Compare Spatial overlap of high priority watersheds for 2 variables
 #'
 #' @param map `[sf]`\cr  Map that include the geometries of the watersheds
 #' along with the prioritization input variables (normalized).
 #' @param var1,var2 `[var]`\cr Variables to be compared.
 #' @param xlab,ylab `[character string]`\cr axis labels.
-#' @param feow `[sf]`\cr  Geometries of the Freshwater Ecoregions of the World (FEOW).
+#' @param feow `[sf]`\cr Geometries of the Freshwater Ecoregions of the World (FEOW).
 #' @param filename `[character string]`\cr Name of the output file (passed to
 #' [ggplot2::ggsave()]).
+#' 
+#' @details 
+#' Used for: 
+#' * Spatial overlap of high priority watersheds for habitat restoration and 
+#' area-based protection;
+#' * Species at risk management and invasive species management.
 #'
 #' @return
 #' The function plots the figure and returns `TRUE` invisibly.
@@ -31,8 +37,7 @@ plot_comparison <- function(
     xlab = "Priority for area-based protection",
     ylab = "Priority for habitat restoration",
     filename = "protection_vs_restoration.png") {
-
-    # PART 1 
+    # PART 1
     pal <- c(
         viridis::viridis_pal(option = "magma")(20)[20],
         viridis::viridis_pal(option = "viridis")(20)[17],
@@ -57,7 +62,9 @@ plot_comparison <- function(
             aes(xmin = xmins, ymin = ymins, xmax = xmaxs, ymax = ymaxs, fill = fills)
         ) +
         geom_point(data = map, aes(x = {{ var1 }}, y = {{ var2 }}), size = 0.8) +
-        scale_fill_manual(values = pal) + xlab(xlab) + ylab(ylab) +
+        scale_fill_manual(values = pal) +
+        xlab(xlab) +
+        ylab(ylab) +
         scale_y_reverse(
             breaks = c(11, perc2[5] - 10), labels = c("high", "low")
         ) +
@@ -115,3 +122,19 @@ plot_comparison <- function(
     invisible(TRUE)
 }
 
+
+#' @describeIn plot_comparison PCA to vizualize correlations among scaled variales.
+#'
+#' @export
+
+plot_comparison_pca <- function(map) {
+    newdata <- map |>
+        dplyr::select(dplyr::ends_with("scaled")) |>
+        sf::st_drop_geometry()
+    pca1 <- stats::prcomp(newdata, scale. = FALSE)
+    utils::head(pca1$rotation)
+    scores <- dplyr::as_tibble(pca1$x)
+
+    ggplot() +
+        geom_point(data = scores, aes(x = PC1, y = PC2))
+}
