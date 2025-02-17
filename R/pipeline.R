@@ -101,7 +101,52 @@ run_pipeline <- function(write = TRUE) {
 
     # ======================== Lake Erie
     cli::cli_progress_step("-Generate watershed prioritization dataset for Lake Erie")
-    suppressMessages(map_le <- generate_lake_erie_dataset())
+    suppressMessages({
+        map_le <- generate_lake_erie_dataset()  |>
+            apply_weights() |>
+            spatialize_results()
+    })
+    cli::cli_progress_done()
+    if (write) {
+        cli::cli_progress_step("Writing prioritization dataset for Lake Erie")
+        sf::st_write(map_le, path_output_data("lakeerie.gpkg"),
+            quiet = TRUE, append = FALSE
+        )
+        cli::cli_progress_done()
+    }
+    #-----------------------
+    cli::cli_progress_step("Plot input variables - Lake Erie")
+    plot_input_variables(map_le, "LE_normalized_index_values.png")
+    cli::cli_progress_done()
+    #-----------------------
+    cli::cli_progress_step("Plot input variables - Lake Erie")
+    plot_input_variables(map_le, "LE_normalized_index_values.png")
+    cli::cli_progress_done()
+    #-----------------------
+    cli::cli_progress_step("Plot scores - Lake Erie")
+    plot_scores(map_le, "LE_national_priorities.png")
+    cli::cli_progress_done()
+    #-----------------------
+    cli::cli_progress_step("Plot comparison protection vs restoration - Lake Erie")
+    plot_comparison(
+        map_le,
+        map_le,
+        Prot_rank_scaled,
+        Rest_rank_scaled,
+        filename = "LE_protection_vs_restoration.png"
+    )
+    cli::cli_progress_done()
+    #-----------------------
+    cli::cli_progress_step("Plot comparison SAR vs AIS - Lake Erie")
+    plot_comparison(
+        map_le,
+        map_le,
+        SAR_rank_scaled,
+        AIS_rank_scaled,
+        "Priority for species at risk management",
+        "Priority for invasive species management",
+        "LE_SAR_vs_AIS.png"
+    )
     cli::cli_progress_done()
     #-----------------------
 }

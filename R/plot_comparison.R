@@ -101,7 +101,7 @@ plot_comparison <- function(
         scale_fill_manual(
             values = pal,
             guide = "none"
-        ) +
+        ) + 
         geom_sf(data = feow, fill = "transparent", color = "black", linewidth = 0.1) +
         theme_minimal() +
         theme(

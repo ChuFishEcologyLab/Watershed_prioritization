@@ -9,11 +9,12 @@
 #' @export
 spatialize_results <- function(x) {
     if (nrow(x) > 1e3) {
-        m_path <- path_input_data("map6.gpkg")
+        path_input_data("map6.gpkg") |>
+            sf::read_sf() |>
+            dplyr::inner_join(x, by = dplyr::join_by(HYBAS_ID, FEOW_ID))
     } else {
-        m_path <- path_input_data("map5.gpkg", lvl = "H12_LakeErie")
+        m_path <- path_input_data("lakeErieH12.gpkg", lvl = "H12_LakeErie") |>
+            sf::read_sf() |>
+            dplyr::inner_join(x, by = dplyr::join_by(HYBAS_ID))
     }
-    m_path |>
-        sf::read_sf() |>
-        dplyr::inner_join(x, by = dplyr::join_by(HYBAS_ID, FEOW_ID))
 }
