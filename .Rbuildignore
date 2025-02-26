@@ -1,0 +1,9 @@
+^ShinyApp$
+^output_data$
+^figs$
+^LICENSE\.md$
+^\.vscode$
+^inst/extdata/ProtectedAreas$
+^pres$
+^NOTES\.md$
+^\.github$
