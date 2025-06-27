@@ -51,7 +51,7 @@ generate_canada_dataset <- function() {
     #------------ Climate and stress data
     ws_data_path <- path_input_data("Variable_data_20241018.xlsx")
     can_data <- ws_data_path |>
-        readxl::read_xlsx(sheet = "H6_climate") |>
+        readxl::read_xlsx(sheet = "H6_CuThreat") |>
         dplyr::select(HYBAS6_ID, Stress, Climate) |>
         dplyr::rename(
             HYBAS_ID = HYBAS6_ID,
