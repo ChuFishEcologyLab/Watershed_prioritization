@@ -2,17 +2,34 @@
 #'
 #' This function runs all the steps the reproduce the analysis.
 #'
-#' @param write a logical, should results be written (2 geopackages)?
+#' @param write a logical, should results be written (as geopackages)?
+#' @param national a logical, should the analysis at the nation scale?
+#' @param lake_erie a logical, should the analysis be done for Lake Erie?
 #'
 #' @import ggplot2 patchwork
 #'
 #' @export
 
-run_pipeline <- function(write = TRUE) {
+run_pipeline <- function(write = TRUE, national = TRUE, lake_erie = TRUE) {
     op <- options("readr.show_progress")
     options("readr.show_progress" = FALSE)
     on.exit(options("readr.show_progress" = op))
-    # ======================== CANADA
+
+    #
+    if (national) {
+        cli::cli_h1("Canada")
+        run_pipeline_canada(write = write)
+    }
+
+    if (lake_erie) {
+        cli::cli_h1("Lake Erie")
+        run_pipeline_lake_erie(write = write)
+    }
+}
+
+
+# ======================== CANADA
+run_pipeline_canada <- function(write = TRUE) {
     suppressMessages({
         feow <- path_input_data("FEOW_CAN_Extent/FEOW__CAN_Extent.shp") |>
             sf::read_sf()
@@ -97,12 +114,14 @@ run_pipeline <- function(write = TRUE) {
     ))
     cli::cli_progress_done()
     #-----------------------
+}
 
 
-    # ======================== Lake Erie
-    cli::cli_progress_step("-Generate watershed prioritization dataset for Lake Erie")
+# ======================== Lake Erie
+run_pipeline_lake_erie <- function(write = TRUE) {
+    cli::cli_progress_step("Generate watershed prioritization dataset for Lake Erie")
     suppressMessages({
-        map_le <- generate_lake_erie_dataset()  |>
+        map_le <- generate_lake_erie_dataset() |>
             apply_weights() |>
             spatialize_results()
     })
