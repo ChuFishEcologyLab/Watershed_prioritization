@@ -121,7 +121,9 @@ server <- function(input, output, session) {
   # -------- Weighting schema
   cursor_ref <- reactive({
     switch(input$objective,
-      "Median across co-authors" = c(-1, 1.12, 1, 1.72, -1.1, -0.5),
+      # WSI, SAR, Rich, Q, FBCI, CCI
+      # "Median across co-authors" = c(-1, 1.12, 1, 1.72, -1.1, -0.5), # old
+      "Median across co-authors" = c(-1, 1.63, 1.75, 2.92, -1, 0.5),
       "Area-based protection" = c(-1, 1.1, 1, 1.7, -1.1, -0.5),
       "Restoration" = c(2.5, 1.4, 1, 1.2, 0.1, -1),
       "SAR management" = c(1.5, 2.1, 0, 1.3, 1.3, 1),

@@ -28,13 +28,14 @@
 plot_weightings <- function(filename = "coauthor_weightings.png") {
     weights <- path_input_data("Co_author_weightings.csv") |>
         readr::read_csv(show_col_types = FALSE)
+    n_expert <- nrow(weights) 
 
     pdata1 <- weights[, c(1:6)]
     pdata1 <- tidyr::pivot_longer(pdata1, cols = starts_with("Weight for"))
     pdata1$name <- rep(c(
         "Watershed stress", "Community change", "Climate change",
         "Species at risk", "Species richness", "Species rarity"
-    ), 8)
+    ), n_expert)
     sumpdata1 <- pdata1 |>
         dplyr::group_by(name) |>
         dplyr::summarize(med = stats::median(value))
@@ -61,7 +62,7 @@ plot_weightings <- function(filename = "coauthor_weightings.png") {
     pdata2$name <- rep(c(
         "Watershed stress", "Community change", "Climate change",
         "Species at risk", "Species richness", "Species rarity"
-    ), 8)
+    ), n_expert)
     sumpdata2 <- pdata2 |>
         dplyr::group_by(name) |>
         dplyr::summarize(med = stats::median(value))
@@ -88,7 +89,7 @@ plot_weightings <- function(filename = "coauthor_weightings.png") {
     pdata3$name <- rep(c(
         "Watershed stress", "Community change", "Climate change",
         "Species at risk", "Species richness", "Species rarity"
-    ), 8)
+    ), n_expert)
     sumpdata3 <- pdata3 |>
         dplyr::group_by(name) |>
         dplyr::summarize(med = stats::median(value))
@@ -115,7 +116,7 @@ plot_weightings <- function(filename = "coauthor_weightings.png") {
     pdata4$name <- rep(c(
         "Watershed stress", "Community change", "Climate change",
         "Species at risk", "Species richness", "Species rarity"
-    ), 8)
+    ), n_expert)
     sumpdata4 <- pdata4 |>
         dplyr::group_by(name) |>
         dplyr::summarize(med = stats::median(value))
