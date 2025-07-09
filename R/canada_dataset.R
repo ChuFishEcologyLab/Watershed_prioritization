@@ -52,12 +52,22 @@ generate_canada_dataset <- function() {
     ws_data_path <- path_input_data("Variable_data_20241018.xlsx")
     can_data <- ws_data_path |>
         readxl::read_xlsx(sheet = "H6_CuThreat") |>
-        dplyr::select(HYBAS6_ID, Stress, Climate) |>
+        dplyr::select(HYBAS6_ID, H6CuThreat) |>
         dplyr::rename(
             HYBAS_ID = HYBAS6_ID,
-            CCI = Climate,
-            WSI = Stress
+            WSI = H6CuThreat
         ) |>
+        # ----------
+        dplyr::left_join(
+            ws_data_path |>
+                readxl::read_xlsx(sheet = "H6_climate") |>
+                dplyr::select(HYBAS6_ID, H6fwvel) |>
+                dplyr::rename(
+                    HYBAS_ID = HYBAS6_ID,
+                    CCI = H6fwvel
+                ),
+            by = "HYBAS_ID"
+        )  |>
         #------------ Fish community importance and priority data (Minns)
         dplyr::left_join(
             cbind(

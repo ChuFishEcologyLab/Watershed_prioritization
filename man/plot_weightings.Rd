@@ -18,7 +18,7 @@ Plot values for weighting each of six watershed indices towards four
 conservation objectives.
 }
 \details{
-Black dots show the suggested weights from each of 8 co-authors for the
+Black dots show the suggested weights from each of 12 co-authors for the
 respective index (y-axis position) and objective (panel). Large red dots
 indicate the median value across co-authors, which was used for downstream
 analyses. Positive values (i.e. > 0 ) indicate that watersheds with high
