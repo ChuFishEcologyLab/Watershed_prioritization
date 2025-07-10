@@ -9,7 +9,7 @@ spatialize_results(x, scale = c("national", "lake erie"))
 \arguments{
 \item{x}{\verb{[data.frame]}\cr A data frame including the results.}
 
-\item{scale}{\link{character string}`\cr Either "national" or "lake erie".#}
+\item{scale}{\verb{[character string]}\cr Either "national" or "lake erie".#}
 }
 \description{
 Generates a sf object including results.

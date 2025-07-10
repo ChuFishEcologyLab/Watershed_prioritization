@@ -1,7 +1,7 @@
 #' Generates a sf object including results.
 #'
 #' @param x `[data.frame]`\cr A data frame including the results.
-#' @param scale [character string]`\cr Either "national" or "lake erie".#
+#' @param scale `[character string]`\cr Either "national" or "lake erie".#
 #'
 #' @details
 #' Use the number of rows to determine whether the geometry of Lake Erie or the
