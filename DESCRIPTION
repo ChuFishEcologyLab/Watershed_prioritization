@@ -2,7 +2,7 @@ Package: watershedPrioritization
 Type: Package
 Title: Prioritize Watersheds Within Canada
 Date: 2025-07-10
-Version: 0.1.2
+Version: 0.1.3
 Authors@R: c(
     person("Cindy", "Chu", email = "Cindy.Chu@dfo-mpo.gc.ca", role = c("aut", "cre")),
     person("inSileco Inc.", comment = "https://insileco.io/", role = c("aut"))
