@@ -56,7 +56,13 @@ See `R/pipeline.R` and the documentation of the package for more details.
 
 ### Run the Shiny
 
-To run the Shiny App, first download this repository, then set your working to 
+The Shiny App is available at https://apps.insileco.io/watershedprioritization. 
+
+### Developer notes
+
+The data included in the Shiny App can be found and exported using code included in `inst/Shiny/data2shiny.R`.
+
+To run the Shiny App locally, first download this repository, then set your working to 
 `ShinyApp`, then run:
 
 ```r
@@ -72,12 +78,6 @@ shiny::runApp()
 - shinybusy (>= 0.3.3),
 - shinyjs (>= 2.1.0),
 - sf (>= 1.0-18)
-
-
-### Developer notes
-
-The data included in the Shiny App can be found and exported using code included in `inst/Shiny/data2shiny.R`.
-
 
 
 ## Basic session info details

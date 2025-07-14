@@ -123,7 +123,7 @@ run_pipeline_lake_erie <- function(write = TRUE) {
     suppressMessages({
         map_le <- generate_lake_erie_dataset() |>
             apply_weights() |>
-            spatialize_results()
+            spatialize_results(scale = "lake erie")
     })
     cli::cli_progress_done()
     if (write) {

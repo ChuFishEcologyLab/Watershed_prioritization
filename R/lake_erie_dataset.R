@@ -8,7 +8,7 @@
 #' Note that raw data are embedded in the R package in `extdata` folder.
 #' The scaling (variables are normalized) enables comparison between regions,
 #' considering that regions have varying numbers of watersheds and,
-#' consequently, different value ranges for ranking. For Lake Erie, Only
+#' consequently, different value ranges for ranking. For Lake Erie, only
 #' 82 units with sufficient data have been retained.
 #'
 #' @return
