@@ -4,10 +4,14 @@
 \alias{run_pipeline}
 \title{Pipeline}
 \usage{
-run_pipeline(write = TRUE)
+run_pipeline(write = TRUE, national = TRUE, lake_erie = TRUE)
 }
 \arguments{
-\item{write}{a logical, should results be written (2 geopackages)?}
+\item{write}{a logical, should results be written (as geopackages)?}
+
+\item{national}{a logical, should the analysis at the nation scale?}
+
+\item{lake_erie}{a logical, should the analysis be done for Lake Erie?}
 }
 \description{
 This function runs all the steps the reproduce the analysis.

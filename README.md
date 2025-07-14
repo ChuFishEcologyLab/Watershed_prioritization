@@ -13,8 +13,6 @@ The prioritizations were based on national spatial data of the richness, rarity,
 
 ### R package 
 
-
-
 - `R/` include the source code
 - `man/` cod
 - `DESCRIPTION` list basic info of the package (version, dependencies, ...)
@@ -45,6 +43,10 @@ Once installed run:
 ```R
 library(watershedPrioritization)
 run_pipeline()
+# for national analaysis only, run 
+run_pipeline(lake_erie = FALSE)
+# for Lake Erie only, run 
+run_pipeline(national = FALSE)
 ```
 
 See `R/pipeline.R` and the documentation of the package for more details.
@@ -52,14 +54,22 @@ See `R/pipeline.R` and the documentation of the package for more details.
 
 ## Shiny App 
 
-To run the Shiny App, first download this repository, then set your working to 
+### Run the Shiny
+
+The Shiny App is available at https://apps.insileco.io/watershedprioritization. 
+
+### Developer notes
+
+The data included in the Shiny App can be found and exported using code included in `inst/Shiny/data2shiny.R`.
+
+To run the Shiny App locally, first download this repository, then set your working to 
 `ShinyApp`, then run:
 
 ```r
 shiny::runApp()
 ```
 
-Note that the following package are required:
+⚠️ To run the Shiny App the following packages are required:
 
 - bslib (>= 0.9.0),
 - leaflet (>= 2.2.2),
@@ -70,12 +80,15 @@ Note that the following package are required:
 - sf (>= 1.0-18)
 
 
-## Basic session Info
+## Basic session info details
 
 Code (package and Shiny App) was tested under: 
 
 ```r
-R version 4.4.2 (2024-10-31)
+sessionInfo()
+R version 4.5.1 (2025-06-13)
 Platform: x86_64-pc-linux-gnu
-Running under: Ubuntu 24.04.2 LTS
+Running under: Ubuntu 25.04
+
+[...]
 ```

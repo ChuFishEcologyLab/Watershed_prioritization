@@ -31,15 +31,16 @@ scale_min_max <- function(x) {
 
 
 utils::globalVariables(c(
-    "AIS_rank_feow", "AIS_rank_feow_scaled", "AIS_score", "CCI", "CCI_n", 
-    "Climate", "Co_author", "FBCI", "FBCI_n", "FEOW_ID", "Fish_priority", 
-    "Fish_richness", "Fish_richness_n", "H12", "H12CountFishMusselSAR", 
-    "H12CuThreat", "H12FwVel2452050", "HYBAS6_ID", "HYBAS_ID", "Jaccard.D", 
-    "PC1", "PC2", "Priority_n", "Prot_rank_feow", "Prot_rank_feow_scaled", 
-    "Protected_area", "Qi", "Rest_rank_feow", "Rest_rank_feow_scaled", "SARI", 
-    "SARI_n", "SAR_rank_feow", "SAR_rank_feow_scaled", "SAR_score", "Stress", 
-    "WSI", "WSI_n", "cor", "fills", "last_col", "med", "name", "objective", 
-    "perc_overlap", "protection_score", "restoration_score", "starts_with", 
-    "value", "wsh_fill", "xmaxs", "xmins", "ymaxs", "ymins", 
-    "AIS_rank_scaled", "Prot_rank_scaled", "Rest_rank_scaled", "SAR_rank_scaled"
+    "AIS_rank_feow", "AIS_rank_feow_scaled", "AIS_rank_scaled", 
+    "AIS_score", "CCI", "CCI_n", "Co_author", "cor", "FBCI", "FBCI_n", 
+    "FEOW_ID", "fills", "Fish_priority", "Fish_richness", "Fish_richness_n", 
+    "H12", "H12CountFishMusselSAR", "H12CuThreat", "H12FwVel2452050", 
+    "HYBAS_ID", "HYBAS6_ID", "H6CuThreat", "H6fwvel", "Jaccard.D", "last_col", 
+    "med", "name", "objective", "PC1", "PC2", "perc_overlap", "Priority_n", 
+    "Prot_rank_feow", "Prot_rank_feow_scaled", "Prot_rank_scaled", 
+    "Protected_area", "protection_score", "Qi", "Rest_rank_feow", 
+    "Rest_rank_feow_scaled", "Rest_rank_scaled", "restoration_score", 
+    "SAR_rank_feow", "SAR_rank_feow_scaled", "SAR_rank_scaled", "SAR_score", 
+    "SARI", "SARI_n", "starts_with", "Stress", "value", "wsh_fill", 
+    "WSI", "WSI_n", "xmaxs", "xmins", "ymaxs", "ymins"
 ))
