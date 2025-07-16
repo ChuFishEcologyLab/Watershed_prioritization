@@ -112,3 +112,9 @@ apply_weights <- function(ws_data) {
 
   ws_data_w
 }
+
+# Apply the weights
+result <- apply_weights(ws_data_w)
+
+# Write to CSV
+write.csv(result, "weighted_scores_output.csv", row.names = FALSE)
