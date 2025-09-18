@@ -35,7 +35,7 @@ To reproduce the analysis, first install the package:
 
 ```R
 install.packages("remotes")
-remotes::install_github("DFOChuLab/Watershed_prioritization")
+remotes::install_github("ChuFishEcologyLab/Watershed_prioritization")
 ```
 
 Once installed run: 
