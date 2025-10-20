@@ -48,7 +48,7 @@ ui <- navbarPage(
           cellWidths = c("40%", "60%")
         ),
         selectInput(inputId = "objective", label = "Conservation objective", choices = c(
-          "Area-based protection", "Restoration", "SAR management", "AIS management"
+          "Area-based protection", "Habitat restoration", "Species at Risk management", "Non-native species management"
         )),
         div(
           class = "my-4",
