@@ -37,7 +37,7 @@ ui <- navbarPage(
         splitLayout(
           selectInput(
             inputId = "scale", label = "Watershed scale",
-            choices = c("Hydrobasin level 6", "Lake Erie")
+            choices = c("National hydrobasin level 6", "Lake Erie and Lake Ontario")
           ),
           div(
             id = "within_feow",
@@ -123,12 +123,12 @@ server <- function(input, output, session) {
     switch(input$objective,
       # WSI, SAR, Rich, Q, FBCI, CCI
       # "Median across co-authors" = c(-1, 1.12, 1, 1.72, -1.1, -0.5), # old
-      "Median across co-authors" = c(-1, 1.63, 1.75, 2.92, -1, 0.5),
+      #"Median across co-authors" = c(-1, 1.63, 1.75, 2.92, -1, 0.5),
       "Area-based protection" = c(-1, 1.1, 1, 1.7, -1.1, -0.5),
       "Restoration" = c(2.5, 1.4, 1, 1.2, 0.1, -1),
       "SAR management" = c(1.5, 2.1, 0, 1.3, 1.3, 1),
       "AIS management" = c(1.4, 1, 1, 1, 1.8, 0.5),
-      "Custom" = rep(1, 6),
+      #"Custom" = rep(1, 6),
       stop("Unknown schema")
     )
   })
