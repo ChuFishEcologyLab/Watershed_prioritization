@@ -19,7 +19,7 @@
 #' }
 #'
 plot_protected_areas <- function(map, filename = "protected_areas.png") {
-    P <- plot_variable(map, WSI_n) +
+    P <- plot_variable(map, Protected_area_n) +
         ggtitle("Protected Areas") + 
         theme(
             plot.margin = unit(c(0.5, 0.5, 1, 0.5), "lines")
