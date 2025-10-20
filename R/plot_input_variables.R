@@ -32,7 +32,7 @@ plot_input_variables <- function(map, filename = "normalized_index_values.png") 
         S2_A, S2_B,
         S2_C, S2_D,
         S2_E, S2_F,
-        labels = c("Watershed stress", "Species at risk", "Species richness", "Species rarity", "Community change", "Climate change"),
+        labels = c("Watershed stress", "Species at risk", "Species richness", "Community rarity", "Community change", "Climate change"),
         font.label = list(size = 10, face = "plain", color = "black"),
         hjust = -0.15, vjust = 1.8,
         ncol = 2, nrow = 3, common.legend = TRUE,
