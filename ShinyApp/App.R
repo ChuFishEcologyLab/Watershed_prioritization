@@ -30,7 +30,7 @@ ui <- navbarPage(
           tagList(
             p(
               icon("circle-info"),
-              "First, select the watershed scale you want to view on the map. If interested in the national scale, click whether you would like the scores calculated within Freshwater Ecoregions. Next, select the conservation objective of interest (default values are median of the co-author weightings). Finally, click the button at the bottom to generate the map."
+              "First, select the watershed scale you want to view on the map. If interested in the national scale, click checkbox if you would like the scores calculated within Freshwater Ecoregions. Next, select the conservation objective of interest (default values are median of the co-author weightings). Finally, click the button at the bottom to generate the map."
             )
           )
         ),
