@@ -24,13 +24,13 @@ ui <- navbarPage(
     sidebarLayout(
       sidebarPanel(
         width = 4,
-        h5(strong("Prioritizing watersheds for conservation")),
+        h5(strong("Prioritizing watersheds for conservation and management")),
         div(
           class = "alert alert-primary", role = "alert",
           tagList(
             p(
               icon("circle-info"),
-              "First, select the scale you want to view on the map. Next, choose the weighting schema. Finally, click the button at the bottom to generate the map."
+              "First, select the watershed scale you want to view on the map. If interested in the national scale select whether you would like the scores calculated within Freshwater Ecoregions. Next, select the conservation objective of interest (default values are median of the co-author weightings). Finally, click the button at the bottom to generate the map."
             )
           )
         ),
@@ -48,7 +48,7 @@ ui <- navbarPage(
           cellWidths = c("40%", "60%")
         ),
         selectInput(inputId = "objective", label = "Weighting schema", choices = c(
-          "Median across co-authors", "Custom", "Area-based protection", "Restoration", "SAR management", "AIS management"
+          #"Median across co-authors", "Custom",# "Area-based protection", "Restoration", "SAR management", "AIS management"
         )),
         div(
           class = "my-4",
