@@ -22,7 +22,7 @@
 #' * SARI_n: Species at risk management
 #' * Fish_richness_n: Species richness.
 #' * Priority_n: Index of priority based on Minns rarity index (1987).
-#' Bote that columns ending with `_n` are normalized.
+#' Note that columns ending with `_n` are normalized.
 #' * Protected_area_n: Percentage of protected area overlap (capped at 100% if
 #' multiple types of protected areas overlap within the watershed, resulting in
 #' a total exceeding this limit).
